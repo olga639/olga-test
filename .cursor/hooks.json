@@ -1,0 +1,15 @@
+{
+    "version": 1,
+    "hooks": {
+        "afterFileEdit": [
+            {
+                "command": ".cursor/hooks/record_modified.sh"
+            }
+        ],
+        "stop": [
+            {
+                "command": ".cursor/hooks/run_ruff.sh"
+            }
+        ]
+    }
+}
