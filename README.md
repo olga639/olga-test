@@ -128,19 +128,26 @@ npm run preview
 
 ```bash
 # 查看所有故障类型
-npm run chaos list
+npm run chaos -- list
 
 # 查看故障详情
-npm run chaos info --type component-crash
+npm run chaos -- info --type syntax-error
 
 # 注入故障
-npm run chaos inject --type component-crash
+npm run chaos -- inject --type syntax-error
 
 # 恢复正常
-npm run chaos restore
+npm run chaos -- restore
+```
 
-# 查看帮助
-npm run chaos help
+**💡 提示**：注意命令中的 `--` 是必需的，用于传递参数给脚本。
+
+**🎯 快速体验**：
+```bash
+# 3步快速测试
+npm run chaos -- inject --type syntax-error  # 1. 注入故障
+git diff                                      # 2. 查看变更
+npm run chaos -- restore                      # 3. 恢复正常
 ```
 
 ### 故障注入流程
@@ -177,28 +184,44 @@ npm run chaos help
 
 ## 📚 文档
 
-### 核心文档
+### 🚀 快速开始
+
+- **[快速开始指南](QUICK_START.md)** ⭐⭐⭐ 强烈推荐
+  - 5分钟上手故障注入
+  - 基础命令速查
+  - 完整测试流程
+  - 常见问题解答
+
+- **[完整演示指南](DEMO_WALKTHROUGH.md)** ⭐⭐ 推荐
+  - 实际操作演示
+  - 详细步骤说明
+  - 预期结果展示
+  - 使用技巧分享
+
+- **[工作流程图](docs/WORKFLOW_DIAGRAM.md)** ⭐ 推荐
+  - 可视化流程图
+  - 系统架构图
+  - 交互时序图
+  - 学习路径图
+
+### 📖 核心文档
 
 - **[故障测试操作手册](docs/FAULT_TEST_MANUAL.md)** ⭐ 重点
   - 每种故障的详细测试步骤
   - 预期结果和验证方法
   - 完整的演练流程
 
-- **[CLI使用手册](docs/CLI_USAGE.md)**
-  - CLI命令详解
-  - 高级用法
-  - 故障排查
-
 - **[架构设计文档](docs/React混沌工程演练/DESIGN_React混沌工程演练.md)**
   - 系统架构
   - 模块设计
   - 数据流向
 
-### 项目文档
+### 📝 项目文档
 
 - **[需求对齐文档](docs/React混沌工程演练/ALIGNMENT_React混沌工程演练.md)**
 - **[共识文档](docs/React混沌工程演练/CONSENSUS_React混沌工程演练.md)**
 - **[任务拆分文档](docs/React混沌工程演练/TASK_React混沌工程演练.md)**
+- **[TODO清单](docs/React混沌工程演练/TODO_React混沌工程演练.md)**
 
 ---
 
