@@ -138,12 +138,16 @@ export const faultRegistry = {
     name: '构建内存溢出',
     category: 'build-errors',
     description: '构建过程中内存不足，导致构建失败',
-    targetFiles: ['vite.config.js'],
-    templateFile: 'chaos-templates/build-errors/build-out-of-memory.template.jsx',
+    targetFiles: ['src/utils/largeData.js', 'src/App.jsx'],
+    templateFile: 'chaos-templates/build-errors/build-out-of-memory.template.js',
+    additionalTemplates: {
+      'src/App.jsx': 'chaos-templates/build-errors/build-out-of-memory-app.template.jsx'
+    },
     expectedError: 'JavaScript heap out of memory',
     severity: 'high',
     buildFails: true,
-    deployFails: true
+    deployFails: true,
+    note: '⚠️ 此故障需要创建大数据文件并在 App.jsx 中导入'
   },
 
   'asset-size-exceeded': {

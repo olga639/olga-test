@@ -293,44 +293,72 @@ git push origin main
 
 ### 4. 未定义变量 (undefined-variable)
 
-**故障描述**：使用未定义的变量或函数
+**故障描述**：导入不存在的模块或导出，导致构建失败
 
 **错误原因**：
-- 变量名拼写错误
-- 忘记导入
-- 作用域错误
-- 函数未声明
+- 导入不存在的模块文件
+- 从存在的模块导入不存在的导出
+- ES Module 解析失败
+
+**⚠️ 设计说明**：
+原始设计使用运行时错误（`ReferenceError`），但这不会导致构建失败。
+新设计使用编译时错误（`import` 语句），确保在构建阶段就失败：
+
+```javascript
+// ❌ 原设计（运行时错误，构建会成功）
+const result = unknownFunction();
+
+// ✅ 新设计（编译时错误，构建会失败）
+import { nonExistentFunction } from './utils/nonExistentModule';
+import { undefinedExport } from '../context/TaskContext';
+```
+
+**为什么这样能失败？**
+- Vite 在构建时必须解析所有 `import` 语句
+- 找不到模块文件 → 立即失败
+- 找不到导出 → 立即失败
+- 不会延迟到运行时
 
 **操作步骤**：
 
 ```bash
 npm run chaos -- inject --type undefined-variable
 git add .
-git commit -m "feat: add new filtering feature"
+git commit -m "test: undefined module import"
 git push origin main
 ```
 
 **预期结果**：
-- ✅ Vercel构建失败
+- ✅ Vercel构建失败（Build阶段）
 - ✅ Build日志显示：
   ```
-  ✘ [ERROR] 'unknownFunction' is not defined
+  ✘ [ERROR] Could not resolve "./utils/nonExistentModule"
   
-  src/pages/TaskListPage.jsx:XX:X:
-    XX │   const result = unknownFunction(data);
-       │                  ^^^^^^^^^^^^^^^^^
+  src/pages/TaskListPage.jsx:18:38:
+    18 │ import { nonExistentFunction } from './utils/nonExistentModule';
+       │                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  
+  The module "./utils/nonExistentModule" was not found on the file system
+  
+  或者：
+  
+  ✘ [ERROR] No matching export in "../context/TaskContext.jsx" for import "undefinedExport"
+  
+  src/pages/TaskListPage.jsx:21:10:
+    21 │ import { undefinedExport } from '../context/TaskContext';
+       │          ~~~~~~~~~~~~~~~
   ```
 
 **验证方法**：
-1. 确认错误信息包含 "is not defined"
-2. 确认指出了未定义的变量名
-3. 确认构建在编译阶段失败
+1. 确认错误信息包含 "Could not resolve" 或 "No matching export"
+2. 确认指出了具体的模块路径或导出名称
+3. 确认构建在模块解析阶段失败
 
 **恢复步骤**：
 ```bash
 npm run chaos -- restore
 git add .
-git commit -m "fix: define missing variable"
+git commit -m "fix: remove invalid imports"
 git push origin main
 ```
 
@@ -391,19 +419,29 @@ git push origin main
 
 ### 6. 依赖版本冲突 (dependency-version-conflict)
 
-**故障描述**：依赖包版本不兼容
+**故障描述**：React 和 React-DOM 主版本不匹配，导致安装或运行时失败
 
 **错误原因**：
-- 主依赖和子依赖版本冲突
-- Peer dependency不满足
-- 版本范围不兼容
+- React 18.3.1 与 React-DOM 17.0.2 版本不兼容
+- React 和 React-DOM 必须使用相同的主版本
+- API 不兼容导致运行时错误
+
+**⚠️ 设计说明**：
+此故障通过创建 React 和 React-DOM 的主版本不匹配来触发：
+- `react: "18.3.1"` (React 18)
+- `react-dom: "17.0.2"` (React-DOM 17)
+
+这会导致：
+1. npm/pnpm 安装时报错（ERESOLVE）
+2. 即使强制安装，运行时也会因为 API 不兼容而失败
+3. React 18 的 `createRoot` API 在 React-DOM 17 中不存在
 
 **操作步骤**：
 
 ```bash
 npm run chaos -- inject --type dependency-version-conflict
 git add .
-git commit -m "chore: upgrade dependencies"
+git commit -m "test: dependency version conflict"
 git push origin main
 ```
 
@@ -411,7 +449,17 @@ git push origin main
 - ✅ Vercel构建失败（Install阶段）
 - ✅ Build日志显示：
   ```
+  npm ERR! code ERESOLVE
   npm ERR! ERESOLVE unable to resolve dependency tree
+  npm ERR! 
+  npm ERR! While resolving: castrel-webhook-demo@2.0.0
+  npm ERR! Found: react@18.3.1
+  npm ERR! 
+  npm ERR! Could not resolve dependency:
+  npm ERR! peer react@"^17.0.2" from react-dom@17.0.2
+  npm ERR! 
+  npm ERR! Fix the upstream dependency conflict, or retry
+  npm ERR! this command with --force or --legacy-peer-deps
   npm ERR! 
   npm ERR! While resolving: castrel-webhook-demo@2.0.0
   npm ERR! Found: react@18.3.1
@@ -619,20 +667,30 @@ git push origin main
 
 ### 11. 构建内存溢出 (build-out-of-memory)
 
-**故障描述**：构建过程中内存不足
+**故障描述**：构建过程中内存不足，导致 Node.js 进程崩溃
 
 **错误原因**：
-- 打包文件过大
-- 内存配置不足
-- 无限循环导致内存泄漏
-- 构建配置不当
+- 创建超大数据集（5M+ 对象）
+- 生成超大字符串（100MB+）
+- 在模块加载时立即执行内存密集型操作
+- 构建工具内存限制不足
+
+**⚠️ 特殊说明**：
+此故障类型会同时修改两个文件：
+1. **创建** `src/utils/largeData.js` - 包含大量内存密集型代码
+2. **修改** `src/App.jsx` - 导入大数据文件，确保代码在构建时执行
+
+**为什么需要导入？**
+- 如果只创建文件但不导入，代码不会执行
+- 不执行就不会消耗内存，也就不会触发内存溢出
+- 必须在构建入口（App.jsx）中导入，确保 Vite 打包时加载这些数据
 
 **操作步骤**：
 
 ```bash
 npm run chaos -- inject --type build-out-of-memory
 git add .
-git commit -m "feat: add large dataset"
+git commit -m "feat: add large dataset for memory test"
 git push origin main
 ```
 
@@ -642,13 +700,64 @@ git push origin main
   ```
   <--- Last few GCs --->
   
+  [12345:0x123456789]   123456 ms: Mark-sweep 2048.0 (2048.0) -> 2048.0 (2048.0) MB, 1234.5 / 0.0 ms  (average mu = 0.123, current mu = 0.123) allocation failure scavenge might not succeed
+  
   FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory
+  1: 0x123456789 node::Abort() [node]
+  2: 0x123456789 node::FatalException(v8::Isolate*, v8::Local<v8::Value>, v8::Local<v8::Message>) [node]
+  ...
   ```
+- ✅ 构建进程异常终止
+- ✅ Vercel 显示构建失败状态
+
+**可能出现的问题**：
+
+**问题1：构建一直 Pending，不报错也不成功**
+- **原因**：文件没有被导入，代码没有执行
+- **解决**：确认 `src/App.jsx` 中包含了 `import { ... } from './utils/largeData'`
+- **验证**：查看 Git 变更，应该有两个文件被修改
+
+**问题2：本地测试时电脑卡死**
+- **原因**：本地内存不足以处理如此大的数据
+- **建议**：不要在本地运行 `npm run build`，直接推送到 Vercel 测试
+- **恢复**：如果已经卡死，强制终止进程：`Ctrl+C` 或关闭终端
+
+**问题3：Vercel 构建超时而不是内存错误**
+- **原因**：Vercel 可能在内存溢出前就超时了
+- **结果**：这也算是构建失败，符合测试目的
+- **日志**：会显示 "Build exceeded maximum time limit"
 
 **验证方法**：
-1. 确认错误信息包含 "out of memory"
-2. 确认显示了内存使用情况
-3. 确认构建在打包阶段失败
+1. 确认 Git 变更包含两个文件：
+   ```bash
+   git diff --name-only
+   # 应该显示：
+   # src/utils/largeData.js (新文件)
+   # src/App.jsx (修改)
+   ```
+
+2. 确认 `App.jsx` 中包含导入语句：
+   ```bash
+   git diff src/App.jsx | grep "largeData"
+   # 应该显示：
+   # +import { ... } from './utils/largeData';
+   ```
+
+3. 确认 Vercel 构建失败：
+   - 查看 Vercel Dashboard
+   - 状态应该是 "Failed" 或 "Error"
+   - 不应该是 "Pending" 或 "Building"
+
+4. 确认错误日志包含以下关键词之一：
+   - "out of memory"
+   - "heap limit"
+   - "allocation failed"
+   - "JavaScript heap"
+
+**与其他故障的区别**：
+- **语法错误**：立即失败，错误信息清晰
+- **依赖错误**：在安装阶段失败
+- **内存溢出**：在打包阶段失败，可能需要几分钟才会触发
 
 **恢复步骤**：
 ```bash

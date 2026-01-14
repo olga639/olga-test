@@ -63,9 +63,31 @@ export default async function inject(args) {
     // 步骤3: 注入错误代码
     logger.step('步骤 3/3: 注入错误代码...');
     
-    for (const targetFile of faultConfig.targetFiles) {
-      applyTemplate(template, targetFile);
-      logger.success(`已注入: ${targetFile}`);
+    // 处理主模板
+    if (faultConfig.targetFiles.length === 1) {
+      // 单文件注入
+      applyTemplate(template, faultConfig.targetFiles[0]);
+      logger.success(`已注入: ${faultConfig.targetFiles[0]}`);
+    } else if (faultConfig.additionalTemplates) {
+      // 多文件注入（使用 additionalTemplates）
+      for (const targetFile of faultConfig.targetFiles) {
+        if (faultConfig.additionalTemplates[targetFile]) {
+          // 使用特定的模板
+          const specificTemplate = loadTemplate(faultConfig.additionalTemplates[targetFile]);
+          applyTemplate(specificTemplate, targetFile);
+          logger.success(`已注入: ${targetFile} (使用 ${faultConfig.additionalTemplates[targetFile]})`);
+        } else {
+          // 使用主模板
+          applyTemplate(template, targetFile);
+          logger.success(`已注入: ${targetFile}`);
+        }
+      }
+    } else {
+      // 多文件使用同一模板
+      for (const targetFile of faultConfig.targetFiles) {
+        applyTemplate(template, targetFile);
+        logger.success(`已注入: ${targetFile}`);
+      }
     }
     
     logger.newLine();

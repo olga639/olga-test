@@ -1,7 +1,7 @@
 /**
  * @fault-type: undefined-variable
  * @category: build-errors
- * @description: 使用未定义的变量或函数
+ * @description: 使用未定义的模块导入，导致构建失败
  * @expected-error: is not defined
  * @target-file: src/pages/TaskListPage.jsx
  * @severity: high
@@ -14,12 +14,20 @@ import TaskCard from '../components/features/TaskCard';
 import Loading from '../components/common/Loading';
 import Badge from '../components/common/Badge';
 
+// 🔴 错误：导入不存在的模块（这会在构建时失败）
+import { nonExistentFunction } from './utils/nonExistentModule';
+// Error: Cannot find module './utils/nonExistentModule'
+
+// 🔴 错误：从存在的模块导入不存在的导出
+import { undefinedExport } from '../context/TaskContext';
+// Error: export 'undefinedExport' was not found in '../context/TaskContext'
+
 /**
  * TaskListPage - 任务列表页面
  * 
- * 🚨 故障注入：未定义变量
- * 错误类型：使用未定义的函数
- * 预期结果：编译失败
+ * 🚨 故障注入：未定义变量/模块
+ * 错误类型：导入不存在的模块或导出
+ * 预期结果：构建失败
  */
 function TaskListPage() {
   const { tasks, loading, fetchTasks } = useTaskContext();
@@ -30,13 +38,19 @@ function TaskListPage() {
     fetchTasks();
   }, [fetchTasks]);
 
-  // 🔴 错误：使用未定义的函数
-  const filteredTasks = unknownFilterFunction(tasks, filter, searchTerm);
-  // ReferenceError: unknownFilterFunction is not defined
+  // 🔴 错误：使用未定义的导入
+  const result = nonExistentFunction(tasks);
+  const config = undefinedExport;
 
-  // 🔴 错误：使用未定义的变量
-  const sortedTasks = filteredTasks.sort(undefinedSortConfig);
-  // ReferenceError: undefinedSortConfig is not defined
+  // 过滤和排序任务
+  const filteredTasks = tasks.filter((task) => {
+    if (filter === 'all') return true;
+    return task.status === filter;
+  }).filter((task) => {
+    if (!searchTerm) return true;
+    return task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           task.description.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   if (loading) {
     return <Loading />;
@@ -77,12 +91,12 @@ function TaskListPage() {
 
       {/* 任务列表 */}
       <div className="grid gap-4">
-        {sortedTasks.length === 0 ? (
+        {filteredTasks.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
             暂无任务
           </div>
         ) : (
-          sortedTasks.map((task) => (
+          filteredTasks.map((task) => (
             <TaskCard key={task.id} task={task} />
           ))
         )}
@@ -92,4 +106,3 @@ function TaskListPage() {
 }
 
 export default TaskListPage;
-
