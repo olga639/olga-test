@@ -33,6 +33,8 @@ if (!user.hasPermission('resource:action')) throw ForbiddenError();
 
 ## 会话/令牌安全
 - 尽可能使用httpOnly + secure cookie；到处使用TLS
+
+
 - 短期过期；刷新时轮换；注销/泄露时撤销
 - 将令牌绑定到受众/颁发者；包含最小声明
 
