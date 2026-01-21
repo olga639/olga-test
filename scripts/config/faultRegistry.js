@@ -126,8 +126,13 @@ export const faultRegistry = {
     name: '循环依赖',
     category: 'build-errors',
     description: '模块间存在循环依赖，导致构建失败或无限循环',
-    targetFiles: ['src/utils/helpers.js'],
+    targetFiles: ['src/utils/helpers.js', 'src/utils/validators.js', 'src/App.jsx', 'vite.config.js'],
     templateFile: 'chaos-templates/build-errors/circular-dependency.template.jsx',
+    additionalTemplates: {
+      'src/utils/validators.js': 'chaos-templates/build-errors/circular-dependency-validators.template.js',
+      'src/App.jsx': 'chaos-templates/build-errors/circular-dependency-app.template.jsx',
+      'vite.config.js': 'chaos-templates/build-errors/circular-dependency-vite.template.js'
+    },
     expectedError: 'Circular dependency detected',
     severity: 'medium',
     buildFails: true,

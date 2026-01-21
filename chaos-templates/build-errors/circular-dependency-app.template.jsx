@@ -1,8 +1,18 @@
+/**
+ * @fault-type: circular-dependency
+ * @category: build-errors
+ * @description: 强制将helpers引入到构建入口，触发循环依赖检测
+ * @expected-error: Circular dependency detected
+ * @target-file: src/App.jsx
+ * @severity: medium
+ */
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import Layout from './components/Layout/Layout';
 import { TaskProvider } from './context/TaskContext';
+import { formatDate } from './utils/helpers';
 
 // 页面组件
 import Home from './pages/Home';
@@ -22,11 +32,14 @@ import NotFoundPage from './pages/NotFoundPage';
  * - 布局组件包裹
  */
 function App() {
+  const buildDate = formatDate(Date.now());
+
   return (
     <ErrorBoundary>
       <TaskProvider>
         <Router>
           <Layout>
+            <span className="hidden" data-build-date={buildDate} />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/tasks" element={<TaskListPage />} />
@@ -43,4 +56,3 @@ function App() {
 }
 
 export default App;
-

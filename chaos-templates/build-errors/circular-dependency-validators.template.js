@@ -1,4 +1,13 @@
 /**
+ * @fault-type: circular-dependency
+ * @category: build-errors
+ * @description: validators 反向依赖 helpers，形成循环依赖
+ * @expected-error: Circular dependency detected
+ * @target-file: src/utils/validators.js
+ * @severity: medium
+ */
+
+/**
  * validators.js - 配合circular-dependency故障的辅助文件
  * 这个文件会被创建在 src/utils/validators.js
  * 它会导入 helpers.js，形成循环依赖

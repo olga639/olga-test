@@ -631,6 +631,8 @@ git push origin main
 - A导入B，B又导入A
 - 多个模块形成依赖环
 - 工具函数互相引用
+ - 构建入口显式引入循环依赖模块
+ - 构建配置将循环依赖告警提升为错误
 
 **操作步骤**：
 
@@ -640,6 +642,12 @@ git add .
 git commit -m "refactor: reorganize utility functions"
 git push origin main
 ```
+
+**注入文件**：
+- `src/utils/helpers.js`
+- `src/utils/validators.js` (新文件)
+- `src/App.jsx`
+- `vite.config.js`
 
 **预期结果**：
 - ✅ Vercel构建失败（Build阶段）

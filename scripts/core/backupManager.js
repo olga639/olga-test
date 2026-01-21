@@ -26,11 +26,13 @@ export async function createBackup(files, faultType) {
     
     // 备份文件
     const backedUpFiles = [];
+    const missingFiles = [];
     const fileHashes = {};
     
     for (const file of files) {
       if (!fileManager.fileExists(file)) {
         logger.warn(`文件不存在，跳过备份: ${file}`);
+        missingFiles.push(file);
         continue;
       }
       
@@ -47,6 +49,7 @@ export async function createBackup(files, faultType) {
       timestamp: new Date().toISOString(),
       faultType,
       files: backedUpFiles,
+      missingFiles,
       fileHashes
     };
     
@@ -78,6 +81,7 @@ export async function restoreBackup() {
     
     // 恢复文件
     const restoredFiles = [];
+    const removedFiles = [];
     
     for (const file of metadata.files) {
       const backupFilePath = path.join(backupPath, file);
@@ -90,9 +94,19 @@ export async function restoreBackup() {
       fileManager.copyFile(backupFilePath, file);
       restoredFiles.push(file);
     }
+
+    if (metadata.missingFiles && metadata.missingFiles.length > 0) {
+      for (const file of metadata.missingFiles) {
+        if (fileManager.fileExists(file)) {
+          fileManager.deleteFile(file);
+          removedFiles.push(file);
+        }
+      }
+    }
     
     return {
       files: restoredFiles,
+      removedFiles,
       faultType: metadata.faultType,
       timestamp: metadata.timestamp
     };

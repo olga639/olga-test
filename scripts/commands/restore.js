@@ -55,6 +55,12 @@ export default async function restore(args) {
     result.files.forEach(file => {
       logger.success(`已恢复: ${file}`);
     });
+
+    if (result.removedFiles && result.removedFiles.length > 0) {
+      result.removedFiles.forEach(file => {
+        logger.success(`已删除: ${file}`);
+      });
+    }
     logger.newLine();
 
     // 步骤2: 清理备份
