@@ -300,7 +300,7 @@ npm run chaos -- info --type <fault-type>
 4. ⚠️ 及时清理测试数据
 
 ### 特殊说明
-- **circular-dependency**: 需要创建辅助文件 `src/utils/validators.js`
+- **circular-dependency**: 需创建 `src/utils/validators.js` 并在 `vite.config.js` 中将 `CIRCULAR_DEPENDENCY` 提升为错误，保证构建必失败
 - **build-out-of-memory**: 可能需要较长时间才能触发
 - **asset-size-exceeded**: 依赖Vite的大小限制配置
 

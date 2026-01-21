@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import Layout from './components/Layout/Layout';
 import { TaskProvider } from './context/TaskContext';
+import { formatDate } from './utils/helpers';
 
 // 页面组件
 import Home from './pages/Home';
@@ -22,11 +23,14 @@ import NotFoundPage from './pages/NotFoundPage';
  * - 布局组件包裹
  */
 function App() {
+  const buildDate = formatDate(Date.now());
+
   return (
     <ErrorBoundary>
       <TaskProvider>
         <Router>
           <Layout>
+            <span className="hidden" data-build-date={buildDate} />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/tasks" element={<TaskListPage />} />
