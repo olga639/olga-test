@@ -1,32 +1,19 @@
 /**
- * @fault-type: circular-dependency
- * @category: build-errors
- * @description: 模块间存在循环依赖
- * @expected-error: Circular dependency
- * @target-file: src/utils/helpers.js
- * @severity: medium
+ * Helpers - 通用格式化工具
  */
-
-// 🚨 故障注入：循环依赖
-// 错误类型：helpers.js → validators.js → helpers.js
-// 预期结果：构建失败或运行时错误
-
-// 🔴 错误：从validators导入，而validators又导入helpers
-import { validateTaskData } from './validators';
 
 /**
  * 格式化任务数据
+ * 
+ * @param {Object} task - 任务对象
+ * @returns {Object} 格式化后的任务对象
  */
 export function formatTaskData(task) {
-  // 使用validators中的函数，造成循环依赖
-  if (!validateTaskData(task)) {
-    throw new Error('Invalid task data');
-  }
-  
   return {
     ...task,
     formattedDate: formatDate(task.createdAt),
     displayStatus: getStatusDisplay(task.status),
+    displayPriority: getPriorityDisplay(task.priority)
   };
 }
 
