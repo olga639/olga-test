@@ -1,25 +1,12 @@
-<<<<<<< HEAD
-=======
-/**
- * @fault-type: import-error
- * @category: build-errors
- * @description: 错误的import路径，导致模块无法找到
- * @expected-error: Cannot find module
- * @target-file: src/App.jsx
- * @severity: high
- */
-
->>>>>>> b98faab (refactor: reorganize imports)
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import Layout from './components/Layout/Layout';
 import { TaskProvider } from './context/TaskContext';
 
-// 🚨 故障注入：错误的导入路径
-// 正确路径应该是 './pages/Home'，这里故意写错
-import Home from './pages/HomePage';  // ❌ 错误：文件不存在
-import TaskListPage from './pages/TaskListPages';  // ❌ 错误：文件名拼写错误
+// Pages
+import Home from './pages/Home';
+import TaskListPage from './pages/TaskListPage';
 import TaskDetailPage from './pages/TaskDetailPage';
 import CreateTaskPage from './pages/CreateTaskPage';
 import AboutPage from './pages/AboutPage';
@@ -28,9 +15,11 @@ import NotFoundPage from './pages/NotFoundPage';
 /**
  * App - 应用根组件
  * 
- * 🚨 故障注入：导入路径错误
- * 错误类型：模块路径不存在
- * 预期结果：Vite编译失败，提示 "Cannot find module"
+ * 功能：
+ * 1. 配置路由
+ * 2. 提供错误边界
+ * 3. 提供全局状态（TaskContext）
+ * 4. 应用布局
  */
 function App() {
   return (
@@ -54,4 +43,3 @@ function App() {
 }
 
 export default App;
-
