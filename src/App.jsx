@@ -13,7 +13,13 @@ import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 /**
- * App - Root Application Component
+ * App - 应用根组件
+ * 
+ * 功能：
+ * 1. 配置路由
+ * 2. 提供错误边界
+ * 3. 提供全局状态（TaskContext）
+ * 4. 应用布局
  */
 function App() {
   return (
@@ -37,4 +43,3 @@ function App() {
 }
 
 export default App;
-
