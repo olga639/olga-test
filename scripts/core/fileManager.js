@@ -1,7 +1,7 @@
 /**
- * File Manager - 文件管理器
+ * File Manager - File Manager
  * 
- * 提供文件读写、复制等操作
+ * Provides file read, write, copy and other operations
  */
 
 import fs from 'fs';
@@ -11,29 +11,29 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// 项目根目录
+// Project root directory
 export const PROJECT_ROOT = path.resolve(__dirname, '../..');
 
 /**
- * 读取文件内容
+ * Read file content
  */
 export function readFile(filePath) {
   const fullPath = path.isAbsolute(filePath) ? filePath : path.join(PROJECT_ROOT, filePath);
   
   if (!fs.existsSync(fullPath)) {
-    throw new Error(`文件不存在: ${filePath}`);
+    throw new Error(`File does not exist: ${filePath}`);
   }
   
   return fs.readFileSync(fullPath, 'utf-8');
 }
 
 /**
- * 写入文件内容
+ * Write file content
  */
 export function writeFile(filePath, content) {
   const fullPath = path.isAbsolute(filePath) ? filePath : path.join(PROJECT_ROOT, filePath);
   
-  // 确保目录存在
+  // Ensure directory exists
   const dir = path.dirname(fullPath);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -43,17 +43,17 @@ export function writeFile(filePath, content) {
 }
 
 /**
- * 复制文件
+ * Copy file
  */
 export function copyFile(source, dest) {
   const sourcePath = path.isAbsolute(source) ? source : path.join(PROJECT_ROOT, source);
   const destPath = path.isAbsolute(dest) ? dest : path.join(PROJECT_ROOT, dest);
   
   if (!fs.existsSync(sourcePath)) {
-    throw new Error(`源文件不存在: ${source}`);
+    throw new Error(`Source file does not exist: ${source}`);
   }
   
-  // 确保目标目录存在
+  // Ensure destination directory exists
   const destDir = path.dirname(destPath);
   if (!fs.existsSync(destDir)) {
     fs.mkdirSync(destDir, { recursive: true });
@@ -63,7 +63,7 @@ export function copyFile(source, dest) {
 }
 
 /**
- * 删除文件
+ * Delete file
  */
 export function deleteFile(filePath) {
   const fullPath = path.isAbsolute(filePath) ? filePath : path.join(PROJECT_ROOT, filePath);
@@ -74,7 +74,7 @@ export function deleteFile(filePath) {
 }
 
 /**
- * 检查文件是否存在
+ * Check if file exists
  */
 export function fileExists(filePath) {
   const fullPath = path.isAbsolute(filePath) ? filePath : path.join(PROJECT_ROOT, filePath);
@@ -82,7 +82,7 @@ export function fileExists(filePath) {
 }
 
 /**
- * 创建目录
+ * Create directory
  */
 export function createDirectory(dirPath) {
   const fullPath = path.isAbsolute(dirPath) ? dirPath : path.join(PROJECT_ROOT, dirPath);
@@ -93,7 +93,7 @@ export function createDirectory(dirPath) {
 }
 
 /**
- * 删除目录
+ * Delete directory
  */
 export function deleteDirectory(dirPath) {
   const fullPath = path.isAbsolute(dirPath) ? dirPath : path.join(PROJECT_ROOT, dirPath);
@@ -104,7 +104,7 @@ export function deleteDirectory(dirPath) {
 }
 
 /**
- * 列出目录中的文件
+ * List files in directory
  */
 export function listFiles(dirPath, recursive = false) {
   const fullPath = path.isAbsolute(dirPath) ? dirPath : path.join(PROJECT_ROOT, dirPath);
@@ -131,7 +131,7 @@ export function listFiles(dirPath, recursive = false) {
 }
 
 /**
- * 获取文件信息
+ * Get file information
  */
 export function getFileInfo(filePath) {
   const fullPath = path.isAbsolute(filePath) ? filePath : path.join(PROJECT_ROOT, filePath);
@@ -154,7 +154,7 @@ export function getFileInfo(filePath) {
 }
 
 /**
- * 计算文件哈希（简单版本）
+ * Calculate file hash (simple version)
  */
 export function getFileHash(filePath) {
   const content = readFile(filePath);
@@ -170,7 +170,7 @@ export function getFileHash(filePath) {
 }
 
 /**
- * 读取JSON文件
+ * Read JSON file
  */
 export function readJSON(filePath) {
   const content = readFile(filePath);
@@ -178,7 +178,7 @@ export function readJSON(filePath) {
 }
 
 /**
- * 写入JSON文件
+ * Write JSON file
  */
 export function writeJSON(filePath, data, pretty = true) {
   const content = pretty ? JSON.stringify(data, null, 2) : JSON.stringify(data);
@@ -200,4 +200,3 @@ export default {
   readJSON,
   writeJSON
 };
-

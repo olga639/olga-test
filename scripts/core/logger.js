@@ -1,16 +1,16 @@
 /**
- * Logger - 日志输出工具
+ * Logger - Logging Utility
  * 
- * 提供彩色的控制台输出
+ * Provides colorful console output
  */
 
-// ANSI颜色代码
+// ANSI color codes
 const colors = {
   reset: '\x1b[0m',
   bright: '\x1b[1m',
   dim: '\x1b[2m',
   
-  // 前景色
+  // Foreground colors
   black: '\x1b[30m',
   red: '\x1b[31m',
   green: '\x1b[32m',
@@ -20,7 +20,7 @@ const colors = {
   cyan: '\x1b[36m',
   white: '\x1b[37m',
   
-  // 背景色
+  // Background colors
   bgRed: '\x1b[41m',
   bgGreen: '\x1b[42m',
   bgYellow: '\x1b[43m',
@@ -28,7 +28,7 @@ const colors = {
 };
 
 /**
- * 格式化文本
+ * Format text
  */
 function format(text, color, bold = false) {
   const style = bold ? colors.bright : '';
@@ -36,135 +36,135 @@ function format(text, color, bold = false) {
 }
 
 /**
- * Logger类
+ * Logger class
  */
 class Logger {
   /**
-   * 成功消息
+   * Success message
    */
   success(message) {
-    console.log(format('✅ ' + message, colors.green, true));
+    console.log(format('[OK] ' + message, colors.green, true));
   }
 
   /**
-   * 错误消息
+   * Error message
    */
   error(message) {
-    console.error(format('❌ ' + message, colors.red, true));
+    console.error(format('[ERROR] ' + message, colors.red, true));
   }
 
   /**
-   * 警告消息
+   * Warning message
    */
   warn(message) {
-    console.warn(format('⚠️  ' + message, colors.yellow, true));
+    console.warn(format('[WARN] ' + message, colors.yellow, true));
   }
 
   /**
-   * 信息消息
+   * Info message
    */
   info(message) {
-    console.log(format('ℹ️  ' + message, colors.blue));
+    console.log(format('[INFO] ' + message, colors.blue));
   }
 
   /**
-   * 提示消息
+   * Tip message
    */
   tip(message) {
-    console.log(format('💡 ' + message, colors.cyan));
+    console.log(format('[TIP] ' + message, colors.cyan));
   }
 
   /**
-   * 步骤消息
+   * Step message
    */
   step(message) {
-    console.log(format('🔹 ' + message, colors.magenta));
+    console.log(format('[STEP] ' + message, colors.magenta));
   }
 
   /**
-   * 普通日志
+   * Normal log
    */
   log(message) {
     console.log(message);
   }
 
   /**
-   * 标题
+   * Title
    */
   title(message) {
     console.log('\n' + format(message, colors.cyan, true));
-    console.log(format('─'.repeat(message.length), colors.cyan));
+    console.log(format('-'.repeat(message.length), colors.cyan));
   }
 
   /**
-   * 分隔线
+   * Divider
    */
   divider() {
-    console.log(format('─'.repeat(60), colors.dim));
+    console.log(format('-'.repeat(60), colors.dim));
   }
 
   /**
-   * 空行
+   * New line
    */
   newLine() {
     console.log('');
   }
 
   /**
-   * 表格
+   * Table
    */
   table(data) {
     console.table(data);
   }
 
   /**
-   * 代码块
+   * Code block
    */
   code(code) {
     console.log(format(code, colors.dim));
   }
 
   /**
-   * 列表项
+   * List item
    */
   listItem(message, indent = 0) {
     const spaces = ' '.repeat(indent * 2);
-    console.log(`${spaces}${format('•', colors.cyan)} ${message}`);
+    console.log(`${spaces}${format('*', colors.cyan)} ${message}`);
   }
 
   /**
-   * 进度指示
+   * Progress indicator
    */
   progress(current, total, message = '') {
     const percentage = Math.round((current / total) * 100);
-    const bar = '█'.repeat(Math.floor(percentage / 5));
-    const empty = '░'.repeat(20 - Math.floor(percentage / 5));
+    const bar = '#'.repeat(Math.floor(percentage / 5));
+    const empty = '-'.repeat(20 - Math.floor(percentage / 5));
     console.log(`${format(bar + empty, colors.green)} ${percentage}% ${message}`);
   }
 
   /**
-   * 带框的消息
+   * Boxed message
    */
   box(message, type = 'info') {
     const lines = message.split('\n');
     const maxLength = Math.max(...lines.map(l => l.length));
-    const border = '─'.repeat(maxLength + 4);
+    const border = '-'.repeat(maxLength + 4);
     
     let color = colors.blue;
     if (type === 'success') color = colors.green;
     if (type === 'error') color = colors.red;
     if (type === 'warn') color = colors.yellow;
     
-    console.log(format('╭' + border + '╮', color));
+    console.log(format('+' + border + '+', color));
     lines.forEach(line => {
       const padding = ' '.repeat(maxLength - line.length);
-      console.log(format('│  ' + line + padding + '  │', color));
+      console.log(format('|  ' + line + padding + '  |', color));
     });
-    console.log(format('╰' + border + '╯', color));
+    console.log(format('+' + border + '+', color));
   }
 
   /**
-   * 询问确认
+   * Ask for confirmation
    */
   async confirm(message) {
     const readline = await import('readline');
@@ -174,7 +174,7 @@ class Logger {
     });
 
     return new Promise((resolve) => {
-      rl.question(format(`❓ ${message} (y/n): `, colors.yellow), (answer) => {
+      rl.question(format(`[?] ${message} (y/n): `, colors.yellow), (answer) => {
         rl.close();
         resolve(answer.toLowerCase() === 'y' || answer.toLowerCase() === 'yes');
       });
@@ -182,6 +182,5 @@ class Logger {
   }
 }
 
-// 导出单例
+// Export singleton
 export default new Logger();
-

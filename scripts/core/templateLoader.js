@@ -1,24 +1,24 @@
 /**
- * Template Loader - 模板加载器
+ * Template Loader - Template Loader
  * 
- * 负责加载和处理错误代码模板
+ * Responsible for loading and processing error code templates
  */
 
 import fileManager from './fileManager.js';
 import logger from './logger.js';
 
 /**
- * 加载模板
+ * Load template
  */
 export function loadTemplate(templatePath) {
   try {
     if (!fileManager.fileExists(templatePath)) {
-      throw new Error(`模板文件不存在: ${templatePath}`);
+      throw new Error(`Template file does not exist: ${templatePath}`);
     }
     
     const content = fileManager.readFile(templatePath);
     
-    // 解析模板元数据（从注释中提取）
+    // Parse template metadata (extract from comments)
     const metadata = parseMetadata(content);
     
     return {
@@ -27,12 +27,12 @@ export function loadTemplate(templatePath) {
       path: templatePath
     };
   } catch (error) {
-    throw new Error(`加载模板失败: ${error.message}`);
+    throw new Error(`Failed to load template: ${error.message}`);
   }
 }
 
 /**
- * 解析模板元数据
+ * Parse template metadata
  */
 function parseMetadata(content) {
   const metadata = {
@@ -43,7 +43,7 @@ function parseMetadata(content) {
     targetFile: null
   };
   
-  // 匹配注释中的元数据
+  // Match metadata in comments
   const metaRegex = /@(\w+):\s*(.+)/g;
   let match;
   
@@ -56,11 +56,11 @@ function parseMetadata(content) {
 }
 
 /**
- * 应用模板到目标文件
+ * Apply template to target file
  */
 export function applyTemplate(template, targetFile) {
   try {
-    // 直接写入模板内容到目标文件
+    // Write template content directly to target file
     fileManager.writeFile(targetFile, template.content);
     
     return {
@@ -68,12 +68,12 @@ export function applyTemplate(template, targetFile) {
       success: true
     };
   } catch (error) {
-    throw new Error(`应用模板失败: ${error.message}`);
+    throw new Error(`Failed to apply template: ${error.message}`);
   }
 }
 
 /**
- * 验证模板
+ * Validate template
  */
 export function validateTemplate(templatePath) {
   try {
@@ -81,22 +81,22 @@ export function validateTemplate(templatePath) {
     
     const errors = [];
     
-    // 检查必要的元数据
+    // Check required metadata
     if (!template.metadata.faultType) {
-      errors.push('缺少 @fault-type 元数据');
+      errors.push('Missing @fault-type metadata');
     }
     
     if (!template.metadata.category) {
-      errors.push('缺少 @category 元数据');
+      errors.push('Missing @category metadata');
     }
     
     if (!template.metadata.description) {
-      errors.push('缺少 @description 元数据');
+      errors.push('Missing @description metadata');
     }
     
-    // 检查内容是否为空
+    // Check if content is empty
     if (!template.content || template.content.trim().length === 0) {
-      errors.push('模板内容为空');
+      errors.push('Template content is empty');
     }
     
     return {
@@ -114,7 +114,7 @@ export function validateTemplate(templatePath) {
 }
 
 /**
- * 列出所有模板
+ * List all templates
  */
 export function listTemplates() {
   const templatesDir = 'chaos-templates';
@@ -137,7 +137,7 @@ export function listTemplates() {
           metadata: template.metadata
         });
       } catch (error) {
-        logger.warn(`无法加载模板 ${file}: ${error.message}`);
+        logger.warn(`Cannot load template ${file}: ${error.message}`);
       }
     }
   });
@@ -151,4 +151,3 @@ export default {
   validateTemplate,
   listTemplates
 };
-

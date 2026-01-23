@@ -4,12 +4,11 @@ import App from './App.jsx';
 import './styles/index.css';
 
 /**
- * 应用入口文件
- * 负责将React应用挂载到DOM
+ * Application Entry File
+ * Responsible for mounting the React application to the DOM
  */
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>
 );
-

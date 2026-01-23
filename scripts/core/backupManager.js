@@ -1,37 +1,37 @@
 /**
- * Backup Manager - 备份管理器
+ * Backup Manager - Backup Manager
  * 
- * 负责文件备份和恢复
+ * Responsible for file backup and restoration
  */
 
 import path from 'path';
 import fileManager from './fileManager.js';
 import logger from './logger.js';
 
-// 备份目录
+// Backup directory
 const BACKUP_DIR = '.chaos-backup';
 const METADATA_FILE = path.join(BACKUP_DIR, 'metadata.json');
 
 /**
- * 创建备份
+ * Create backup
  */
 export async function createBackup(files, faultType) {
   try {
-    // 确保备份目录存在
+    // Ensure backup directory exists
     fileManager.createDirectory(BACKUP_DIR);
     
-    // 生成备份ID（时间戳）
+    // Generate backup ID (timestamp)
     const backupId = new Date().toISOString().replace(/[:.]/g, '-');
     const backupPath = path.join(BACKUP_DIR, backupId);
     
-    // 备份文件
+    // Backup files
     const backedUpFiles = [];
     const missingFiles = [];
     const fileHashes = {};
     
     for (const file of files) {
       if (!fileManager.fileExists(file)) {
-        logger.warn(`文件不存在，跳过备份: ${file}`);
+        logger.warn(`File does not exist, skipping backup: ${file}`);
         missingFiles.push(file);
         continue;
       }
@@ -43,7 +43,7 @@ export async function createBackup(files, faultType) {
       fileHashes[file] = fileManager.getFileHash(file);
     }
     
-    // 保存备份元数据
+    // Save backup metadata
     const metadata = {
       backupId,
       timestamp: new Date().toISOString(),
@@ -61,25 +61,25 @@ export async function createBackup(files, faultType) {
       path: backupPath
     };
   } catch (error) {
-    throw new Error(`创建备份失败: ${error.message}`);
+    throw new Error(`Failed to create backup: ${error.message}`);
   }
 }
 
 /**
- * 恢复备份
+ * Restore backup
  */
 export async function restoreBackup() {
   try {
-    // 检查备份是否存在
+    // Check if backup exists
     if (!hasBackup()) {
-      throw new Error('未找到备份文件');
+      throw new Error('No backup files found');
     }
     
-    // 读取备份元数据
+    // Read backup metadata
     const metadata = fileManager.readJSON(METADATA_FILE);
     const backupPath = path.join(BACKUP_DIR, metadata.backupId);
     
-    // 恢复文件
+    // Restore files
     const restoredFiles = [];
     const removedFiles = [];
     
@@ -87,7 +87,7 @@ export async function restoreBackup() {
       const backupFilePath = path.join(backupPath, file);
       
       if (!fileManager.fileExists(backupFilePath)) {
-        logger.warn(`备份文件不存在，跳过恢复: ${file}`);
+        logger.warn(`Backup file does not exist, skipping restore: ${file}`);
         continue;
       }
       
@@ -111,12 +111,12 @@ export async function restoreBackup() {
       timestamp: metadata.timestamp
     };
   } catch (error) {
-    throw new Error(`恢复备份失败: ${error.message}`);
+    throw new Error(`Failed to restore backup: ${error.message}`);
   }
 }
 
 /**
- * 清理备份
+ * Clean backup
  */
 export async function cleanBackup() {
   try {
@@ -124,19 +124,19 @@ export async function cleanBackup() {
       fileManager.deleteDirectory(BACKUP_DIR);
     }
   } catch (error) {
-    throw new Error(`清理备份失败: ${error.message}`);
+    throw new Error(`Failed to clean backup: ${error.message}`);
   }
 }
 
 /**
- * 检查备份是否存在
+ * Check if backup exists
  */
 export function hasBackup() {
   return fileManager.fileExists(METADATA_FILE);
 }
 
 /**
- * 获取备份信息
+ * Get backup information
  */
 export function getBackupInfo() {
   if (!hasBackup()) {
@@ -151,7 +151,7 @@ export function getBackupInfo() {
 }
 
 /**
- * 列出所有备份
+ * List all backups
  */
 export function listBackups() {
   if (!fileManager.fileExists(BACKUP_DIR)) {
@@ -187,4 +187,3 @@ export default {
   getBackupInfo,
   listBackups
 };
-

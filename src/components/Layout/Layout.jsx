@@ -3,32 +3,31 @@ import Header from './Header';
 import Footer from './Footer';
 
 /**
- * Layout - 布局组件
+ * Layout - Layout Component
  * 
- * 功能：
- * - 提供统一的页面布局结构
- * - 包含Header和Footer
- * - 主内容区域自适应高度
+ * Features:
+ * - Provide unified page layout structure
+ * - Include Header and Footer
+ * - Main content area with adaptive height
  * 
  * @param {Object} props
- * @param {React.ReactNode} props.children - 页面内容
+ * @param {React.ReactNode} props.children - Page content
  */
 function Layout({ children }) {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* 顶部导航 */}
+      {/* Top Navigation */}
       <Header />
 
-      {/* 主内容区域 */}
+      {/* Main Content Area */}
       <main className="flex-1 container mx-auto px-4 py-8 max-w-7xl">
         {children}
       </main>
 
-      {/* 底部信息 */}
+      {/* Footer */}
       <Footer />
     </div>
   );
 }
 
 export default Layout;
-

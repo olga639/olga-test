@@ -1,7 +1,7 @@
 /**
  * @fault-type: circular-dependency
  * @category: build-errors
- * @description: 强制将helpers引入到构建入口，触发循环依赖检测
+ * @description: Force helpers import into build entry to trigger circular dependency detection
  * @expected-error: Circular dependency detected
  * @target-file: src/App.jsx
  * @severity: medium
@@ -14,7 +14,7 @@ import Layout from './components/Layout/Layout';
 import { TaskProvider } from './context/TaskContext';
 import { formatDate } from './utils/helpers';
 
-// 页面组件
+// Page components
 import Home from './pages/Home';
 import TaskListPage from './pages/TaskListPage';
 import TaskDetailPage from './pages/TaskDetailPage';
@@ -23,13 +23,13 @@ import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 /**
- * App - 应用根组件
+ * App - Root Application Component
  * 
- * 职责：
- * - 配置路由系统
- * - 提供全局状态管理（TaskContext）
- * - 错误边界包裹
- * - 布局组件包裹
+ * Responsibilities:
+ * - Configure routing system
+ * - Provide global state management (TaskContext)
+ * - Error boundary wrapper
+ * - Layout component wrapper
  */
 function App() {
   const buildDate = formatDate(Date.now());

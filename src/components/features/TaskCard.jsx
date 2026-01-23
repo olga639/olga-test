@@ -4,48 +4,48 @@ import Badge from '../common/Badge';
 import Button from '../common/Button';
 
 /**
- * TaskCard - 任务卡片组件
+ * TaskCard - Task Card Component
  * 
- * 功能：
- * - 展示任务基本信息
- * - 支持快速操作（完成、删除）
- * - 点击跳转到详情页
- * - 优先级和状态标识
+ * Features:
+ * - Display basic task information
+ * - Support quick actions (complete, delete)
+ * - Click to navigate to detail page
+ * - Priority and status indicators
  * 
  * @param {Object} props
- * @param {Object} props.task - 任务对象
- * @param {Function} props.onToggleStatus - 切换状态回调
- * @param {Function} props.onDelete - 删除回调
+ * @param {Object} props.task - Task object
+ * @param {Function} props.onToggleStatus - Toggle status callback
+ * @param {Function} props.onDelete - Delete callback
  */
 function TaskCard({ task = {}, onToggleStatus, onDelete }) {
   const navigate = useNavigate();
 
-  // 优先级配置
+  // Priority configuration
   const priorityConfig = {
-    high: { label: '高优先级', variant: 'danger', icon: '🔥' },
-    medium: { label: '中优先级', variant: 'warning', icon: '⚡' },
-    low: { label: '低优先级', variant: 'info', icon: '📌' }
+    high: { label: 'High Priority', variant: 'danger', icon: '🔥' },
+    medium: { label: 'Medium Priority', variant: 'warning', icon: '⚡' },
+    low: { label: 'Low Priority', variant: 'info', icon: '📌' }
   };
 
-  // 状态配置
+  // Status configuration
   const statusConfig = {
-    pending: { label: '待处理', variant: 'default', icon: '⏳' },
-    'in-progress': { label: '进行中', variant: 'info', icon: '🚀' },
-    completed: { label: '已完成', variant: 'success', icon: '✅' }
+    pending: { label: 'Pending', variant: 'default', icon: '⏳' },
+    'in-progress': { label: 'In Progress', variant: 'info', icon: '🚀' },
+    completed: { label: 'Completed', variant: 'success', icon: '✅' }
   };
 
   const priority = priorityConfig[task.priority] || priorityConfig.medium;
   const status = statusConfig[task.status] || statusConfig.pending;
 
   /**
-   * 处理卡片点击
+   * Handle card click
    */
   const handleCardClick = () => {
     navigate(`/tasks/${task.id}`);
   };
 
   /**
-   * 处理切换状态
+   * Handle toggle status
    */
   const handleToggleStatus = (e) => {
     e.stopPropagation();
@@ -53,22 +53,22 @@ function TaskCard({ task = {}, onToggleStatus, onDelete }) {
   };
 
   /**
-   * 处理删除
+   * Handle delete
    */
   const handleDelete = (e) => {
     e.stopPropagation();
-    if (window.confirm(`确定要删除任务"${task.title}"吗？`)) {
+    if (window.confirm(`Are you sure you want to delete "${task.title}"?`)) {
       onDelete && onDelete(task.id);
     }
   };
 
   /**
-   * 格式化日期
+   * Format date
    */
   const formatDate = (dateString) => {
-    if (!dateString) return '无截止日期';
+    if (!dateString) return 'No due date';
     const date = new Date(dateString);
-    return date.toLocaleDateString('zh-CN', {
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -76,7 +76,7 @@ function TaskCard({ task = {}, onToggleStatus, onDelete }) {
   };
 
   /**
-   * 判断是否逾期
+   * Check if overdue
    */
   const isOverdue = () => {
     if (!task.dueDate || task.status === 'completed') return false;
@@ -88,7 +88,7 @@ function TaskCard({ task = {}, onToggleStatus, onDelete }) {
       className="card hoverable cursor-pointer transition-all duration-200 hover:scale-[1.02]"
       onClick={handleCardClick}
     >
-      {/* 卡片头部 */}
+      {/* Card Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
           <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
@@ -100,7 +100,7 @@ function TaskCard({ task = {}, onToggleStatus, onDelete }) {
         </div>
       </div>
 
-      {/* 标签和徽章 */}
+      {/* Tags and Badges */}
       <div className="flex flex-wrap gap-2 mb-4">
         <Badge variant={priority.variant} size="sm">
           {priority.icon} {priority.label}
@@ -115,7 +115,7 @@ function TaskCard({ task = {}, onToggleStatus, onDelete }) {
         ))}
       </div>
 
-      {/* 截止日期 */}
+      {/* Due Date */}
       <div className="flex items-center text-sm text-gray-500 mb-4">
         <svg
           className="w-4 h-4 mr-1"
@@ -132,11 +132,11 @@ function TaskCard({ task = {}, onToggleStatus, onDelete }) {
         </svg>
         <span className={isOverdue() ? 'text-red-600 font-medium' : ''}>
           {formatDate(task.dueDate)}
-          {isOverdue() && ' (已逾期)'}
+          {isOverdue() && ' (Overdue)'}
         </span>
       </div>
 
-      {/* 操作按钮 */}
+      {/* Action Buttons */}
       <div className="flex gap-2 pt-3 border-t border-gray-200">
         <Button
           variant={task.status === 'completed' ? 'secondary' : 'success'}
@@ -144,14 +144,14 @@ function TaskCard({ task = {}, onToggleStatus, onDelete }) {
           onClick={handleToggleStatus}
           className="flex-1"
         >
-          {task.status === 'completed' ? '标记未完成' : '标记完成'}
+          {task.status === 'completed' ? 'Mark Incomplete' : 'Mark Complete'}
         </Button>
         <Button
           variant="danger"
           size="sm"
           onClick={handleDelete}
         >
-          删除
+          Delete
         </Button>
       </div>
     </div>
@@ -159,4 +159,3 @@ function TaskCard({ task = {}, onToggleStatus, onDelete }) {
 }
 
 export default TaskCard;
-

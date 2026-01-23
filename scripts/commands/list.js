@@ -1,10 +1,10 @@
 /**
- * List Command - 列表命令
+ * List Command - List Command
  * 
- * 功能：
- * - 列出所有可用的故障类型
- * - 按分类显示
- * - 显示统计信息
+ * Features:
+ * - List all available fault types
+ * - Display by category
+ * - Display statistics
  */
 
 import { getFaultsByCategory, getFaultStats } from '../config/faultRegistry.js';
@@ -13,29 +13,29 @@ import logger from '../core/logger.js';
 export default async function list(args) {
   try {
     logger.newLine();
-    logger.title('📋 可用的故障类型');
+    logger.title('Available Fault Types');
     logger.newLine();
 
-    // 获取故障列表和统计
+    // Get fault list and statistics
     const faultsByCategory = getFaultsByCategory();
     const stats = getFaultStats();
 
-    // 显示统计信息
-    logger.info(`总计: ${stats.total} 种故障类型`);
+    // Display statistics
+    logger.info(`Total: ${stats.total} fault types`);
     logger.newLine();
 
-    // 分类显示
+    // Display by category
     const categoryNames = {
-      'build-errors': '🔨 构建错误',
-      'runtime-errors': '⚡ 运行时错误',
-      'resource-errors': '📦 资源加载错误',
-      'performance-issues': '🐌 性能问题'
+      'build-errors': 'Build Errors',
+      'runtime-errors': 'Runtime Errors',
+      'resource-errors': 'Resource Loading Errors',
+      'performance-issues': 'Performance Issues'
     };
 
     const severityColors = {
-      high: '🔴',
-      medium: '🟡',
-      low: '🟢'
+      high: '[HIGH]',
+      medium: '[MEDIUM]',
+      low: '[LOW]'
     };
 
     Object.entries(faultsByCategory).forEach(([category, faults]) => {
@@ -45,13 +45,13 @@ export default async function list(args) {
       logger.newLine();
 
       faults.forEach((fault, index) => {
-        const severityIcon = severityColors[fault.severity] || '⚪';
+        const severityIcon = severityColors[fault.severity] || '[?]';
         logger.log(`  ${index + 1}. ${severityIcon} ${fault.type}`);
-        logger.log(`     名称: ${fault.name}`);
-        logger.log(`     描述: ${fault.description}`);
-        logger.log(`     严重程度: ${fault.severity}`);
-        logger.log(`     构建失败: ${fault.buildFails ? '是' : '否'}`);
-        logger.log(`     运行时失败: ${fault.runtimeFails ? '是' : '否'}`);
+        logger.log(`     Name: ${fault.name}`);
+        logger.log(`     Description: ${fault.description}`);
+        logger.log(`     Severity: ${fault.severity}`);
+        logger.log(`     Build Fails: ${fault.buildFails ? 'Yes' : 'No'}`);
+        logger.log(`     Runtime Fails: ${fault.runtimeFails ? 'Yes' : 'No'}`);
         logger.newLine();
       });
     });
@@ -59,19 +59,19 @@ export default async function list(args) {
     logger.divider();
     logger.newLine();
 
-    // 显示使用说明
-    logger.title('💡 使用方法');
+    // Display usage instructions
+    logger.title('Usage');
     logger.newLine();
     
-    logger.log('注入故障:');
+    logger.log('Inject fault:');
     logger.code('  npm run chaos inject --type <fault-type>');
     logger.newLine();
     
-    logger.log('查看故障详情:');
+    logger.log('View fault details:');
     logger.code('  npm run chaos info --type <fault-type>');
     logger.newLine();
     
-    logger.log('示例:');
+    logger.log('Example:');
     logger.code('  npm run chaos inject --type component-crash');
     logger.newLine();
 
@@ -80,7 +80,7 @@ export default async function list(args) {
 
   } catch (error) {
     logger.newLine();
-    logger.error(`列出故障类型失败: ${error.message}`);
+    logger.error(`Failed to list fault types: ${error.message}`);
     logger.newLine();
     
     if (process.env.DEBUG) {
@@ -90,4 +90,3 @@ export default async function list(args) {
     process.exit(1);
   }
 }
-

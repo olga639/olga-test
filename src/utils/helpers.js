@@ -1,12 +1,12 @@
 /**
- * Helpers - 通用格式化工具
+ * Helpers - Common Formatting Utilities
  */
 
 /**
- * 格式化任务数据
+ * Format task data
  * 
- * @param {Object} task - 任务对象
- * @returns {Object} 格式化后的任务对象
+ * @param {Object} task - Task object
+ * @returns {Object} Formatted task object
  */
 export function formatTaskData(task) {
   return {
@@ -18,33 +18,32 @@ export function formatTaskData(task) {
 }
 
 /**
- * 格式化日期
+ * Format date
  */
 export function formatDate(date) {
-  return new Date(date).toLocaleDateString('zh-CN');
+  return new Date(date).toLocaleDateString('en-US');
 }
 
 /**
- * 获取状态显示文本
+ * Get status display text
  */
 export function getStatusDisplay(status) {
   const statusMap = {
-    pending: '待处理',
-    'in-progress': '进行中',
-    completed: '已完成',
+    pending: 'Pending',
+    'in-progress': 'In Progress',
+    completed: 'Completed',
   };
   return statusMap[status] || status;
 }
 
 /**
- * 获取优先级显示文本
+ * Get priority display text
  */
 export function getPriorityDisplay(priority) {
   const priorityMap = {
-    low: '低',
-    medium: '中',
-    high: '高',
+    low: 'Low',
+    medium: 'Medium',
+    high: 'High',
   };
   return priorityMap[priority] || priority;
 }
-

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 /**
- * Vercel部署诊断工具
- * 用于检查项目配置是否正确
+ * Vercel Deployment Diagnostic Tool
+ * Used to check if project configuration is correct
  */
 
 import fs from 'fs';
@@ -33,7 +33,7 @@ function checkFile(filePath, description) {
     log(`✅ ${description}: ${filePath}`, 'green');
     return true;
   } else {
-    log(`❌ ${description}不存在: ${filePath}`, 'red');
+    log(`❌ ${description} does not exist: ${filePath}`, 'red');
     return false;
   }
 }
@@ -53,24 +53,24 @@ function checkJSON(filePath, checks) {
         log(`  ✅ ${description}`, 'green');
       } else {
         log(`  ❌ ${description}`, 'red');
-        log(`     期望: ${expected || '存在'}, 实际: ${value || '不存在'}`, 'yellow');
+        log(`     Expected: ${expected || 'exists'}, Actual: ${value || 'does not exist'}`, 'yellow');
         allPassed = false;
       }
     });
     
     return allPassed;
   } catch (error) {
-    log(`  ❌ 解析失败: ${error.message}`, 'red');
+    log(`  ❌ Parse failed: ${error.message}`, 'red');
     return false;
   }
 }
 
 console.log('\n' + '='.repeat(60));
-log('🔍 Vercel部署诊断工具', 'bold');
+log('🔍 Vercel Deployment Diagnostic Tool', 'bold');
 console.log('='.repeat(60) + '\n');
 
-// 1. 检查必需文件
-log('📁 检查必需文件...', 'blue');
+// 1. Check required files
+log('📁 Checking required files...', 'blue');
 const hasPackageJson = checkFile('package.json', 'package.json');
 const hasVercelJson = checkFile('vercel.json', 'vercel.json');
 const hasViteConfig = checkFile('vite.config.js', 'vite.config.js');
@@ -78,63 +78,63 @@ const hasIndexHtml = checkFile('index.html', 'index.html');
 const hasSrcMain = checkFile('src/main.jsx', 'src/main.jsx');
 console.log();
 
-// 2. 检查package.json
-log('📦 检查 package.json...', 'blue');
+// 2. Check package.json
+log('📦 Checking package.json...', 'blue');
 checkJSON('package.json', [
-  { path: 'scripts.build', description: 'build脚本存在' },
-  { path: 'scripts.dev', description: 'dev脚本存在' },
-  { path: 'dependencies.react', description: 'React依赖存在' },
-  { path: 'dependencies.react-router-dom', description: 'React Router依赖存在' },
+  { path: 'scripts.build', description: 'build script exists' },
+  { path: 'scripts.dev', description: 'dev script exists' },
+  { path: 'dependencies.react', description: 'React dependency exists' },
+  { path: 'dependencies.react-router-dom', description: 'React Router dependency exists' },
 ]);
 console.log();
 
-// 3. 检查vercel.json
-log('⚙️  检查 vercel.json...', 'blue');
+// 3. Check vercel.json
+log('⚙️  Checking vercel.json...', 'blue');
 const vercelConfig = JSON.parse(fs.readFileSync(path.resolve(projectRoot, 'vercel.json'), 'utf8'));
-log(`  ℹ️  配置内容:`, 'blue');
+log(`  ℹ️  Configuration content:`, 'blue');
 console.log(JSON.stringify(vercelConfig, null, 2));
 
-// 检查关键配置
+// Check key configurations
 if (vercelConfig.routes) {
   const hasFilesystemHandler = vercelConfig.routes.some(r => r.handle === 'filesystem');
   const hasCatchAllRoute = vercelConfig.routes.some(r => r.src === '/(.*)' || r.src === '/(.*).html');
   
   if (hasFilesystemHandler) {
-    log(`  ✅ 包含 filesystem handler`, 'green');
+    log(`  ✅ Contains filesystem handler`, 'green');
   } else {
-    log(`  ⚠️  缺少 filesystem handler（可能导致静态资源加载失败）`, 'yellow');
+    log(`  ⚠️  Missing filesystem handler (may cause static resource loading failure)`, 'yellow');
   }
   
   if (hasCatchAllRoute) {
-    log(`  ✅ 包含 catch-all 路由`, 'green');
+    log(`  ✅ Contains catch-all route`, 'green');
   } else {
-    log(`  ❌ 缺少 catch-all 路由（SPA路由将无法工作）`, 'red');
+    log(`  ❌ Missing catch-all route (SPA routing will not work)`, 'red');
   }
 }
 console.log();
 
-// 4. 检查vite.config.js
-log('⚡ 检查 vite.config.js...', 'blue');
+// 4. Check vite.config.js
+log('⚡ Checking vite.config.js...', 'blue');
 const viteConfig = fs.readFileSync(path.resolve(projectRoot, 'vite.config.js'), 'utf8');
 if (viteConfig.includes("base: '/'") || viteConfig.includes('base:"/"')) {
-  log(`  ✅ base配置正确`, 'green');
+  log(`  ✅ base configuration is correct`, 'green');
 } else {
-  log(`  ⚠️  未找到 base: '/' 配置`, 'yellow');
+  log(`  ⚠️  base: '/' configuration not found`, 'yellow');
 }
 
 if (viteConfig.includes("outDir: 'dist'") || viteConfig.includes('outDir:"dist"')) {
-  log(`  ✅ outDir配置正确`, 'green');
+  log(`  ✅ outDir configuration is correct`, 'green');
 } else {
-  log(`  ⚠️  未找到 outDir: 'dist' 配置`, 'yellow');
+  log(`  ⚠️  outDir: 'dist' configuration not found`, 'yellow');
 }
 console.log();
 
-// 5. 检查构建产物
-log('🏗️  检查构建产物...', 'blue');
+// 5. Check build output
+log('🏗️  Checking build output...', 'blue');
 const distPath = path.resolve(projectRoot, 'dist');
 const distExists = fs.existsSync(distPath);
 if (distExists) {
-  log(`  ✅ dist目录存在`, 'green');
+  log(`  ✅ dist directory exists`, 'green');
   
   const distIndexPath = path.resolve(projectRoot, 'dist/index.html');
   const distAssetsPath = path.resolve(projectRoot, 'dist/assets');
@@ -142,66 +142,66 @@ if (distExists) {
   const distAssetsExists = fs.existsSync(distAssetsPath);
   
   if (distIndexExists) {
-    log(`  ✅ dist/index.html存在`, 'green');
+    log(`  ✅ dist/index.html exists`, 'green');
     
-    // 检查index.html内容
+    // Check index.html content
     const distIndexContent = fs.readFileSync(distIndexPath, 'utf8');
     if (distIndexContent.includes('<div id="root">')) {
-      log(`  ✅ index.html包含root元素`, 'green');
+      log(`  ✅ index.html contains root element`, 'green');
     }
     if (distIndexContent.includes('type="module"')) {
-      log(`  ✅ index.html包含模块脚本`, 'green');
+      log(`  ✅ index.html contains module script`, 'green');
     }
   } else {
-    log(`  ❌ dist/index.html不存在`, 'red');
+    log(`  ❌ dist/index.html does not exist`, 'red');
   }
   
   if (distAssetsExists) {
-    log(`  ✅ dist/assets目录存在`, 'green');
+    log(`  ✅ dist/assets directory exists`, 'green');
     const assets = fs.readdirSync(distAssetsPath);
-    log(`  ℹ️  资源文件数量: ${assets.length}`, 'blue');
+    log(`  ℹ️  Number of asset files: ${assets.length}`, 'blue');
   } else {
-    log(`  ❌ dist/assets目录不存在`, 'red');
+    log(`  ❌ dist/assets directory does not exist`, 'red');
   }
 } else {
-  log(`  ⚠️  dist目录不存在（请先运行 npm run build）`, 'yellow');
+  log(`  ⚠️  dist directory does not exist (please run npm run build first)`, 'yellow');
 }
 console.log();
 
-// 6. 检查路由配置
-log('🛣️  检查路由配置...', 'blue');
+// 6. Check routing configuration
+log('🛣️  Checking routing configuration...', 'blue');
 const appContent = fs.readFileSync(path.resolve(projectRoot, 'src/App.jsx'), 'utf8');
 if (appContent.includes('BrowserRouter')) {
-  log(`  ✅ 使用 BrowserRouter`, 'green');
-  log(`  ℹ️  需要确保Vercel配置正确以支持SPA路由`, 'blue');
+  log(`  ✅ Using BrowserRouter`, 'green');
+  log(`  ℹ️  Need to ensure Vercel configuration is correct to support SPA routing`, 'blue');
 } else if (appContent.includes('HashRouter')) {
-  log(`  ⚠️  使用 HashRouter（URL会包含#号）`, 'yellow');
+  log(`  ⚠️  Using HashRouter (URL will contain # symbol)`, 'yellow');
 } else {
-  log(`  ❌ 未找到Router配置`, 'red');
+  log(`  ❌ Router configuration not found`, 'red');
 }
 console.log();
 
-// 7. 总结和建议
+// 7. Summary and recommendations
 console.log('='.repeat(60));
-log('📋 诊断总结', 'bold');
+log('📋 Diagnostic Summary', 'bold');
 console.log('='.repeat(60));
 
 if (hasPackageJson && hasVercelJson && hasViteConfig && distExists) {
-  log('\n✅ 基本配置正确！', 'green');
-  log('\n📝 下一步操作:', 'blue');
-  log('  1. 提交更改: git add . && git commit -m "fix: update Vercel config"', 'reset');
-  log('  2. 推送代码: git push origin main', 'reset');
-  log('  3. 等待Vercel自动部署', 'reset');
-  log('  4. 测试部署结果', 'reset');
+  log('\n✅ Basic configuration is correct!', 'green');
+  log('\n📝 Next steps:', 'blue');
+  log('  1. Commit changes: git add . && git commit -m "fix: update Vercel config"', 'reset');
+  log('  2. Push code: git push origin main', 'reset');
+  log('  3. Wait for Vercel auto-deployment', 'reset');
+  log('  4. Test deployment result', 'reset');
 } else {
-  log('\n⚠️  发现一些问题，请按照上述提示修复', 'yellow');
+  log('\n⚠️  Some issues found, please fix according to the above prompts', 'yellow');
 }
 
-log('\n💡 如果部署后仍然空白，请检查:', 'blue');
-log('  1. 浏览器开发者工具 Console（F12）', 'reset');
-log('  2. Network标签，查看资源加载状态', 'reset');
-log('  3. Vercel部署日志', 'reset');
-log('  4. 本地运行 npm run preview 测试构建产物', 'reset');
+log('\n💡 If still blank after deployment, please check:', 'blue');
+log('  1. Browser Developer Tools Console (F12)', 'reset');
+log('  2. Network tab, check resource loading status', 'reset');
+log('  3. Vercel deployment logs', 'reset');
+log('  4. Run npm run preview locally to test build output', 'reset');
 
-log('\n📚 详细文档: VERCEL_DEPLOYMENT_GUIDE.md\n', 'blue');
+log('\n📚 Detailed documentation: VERCEL_DEPLOYMENT_GUIDE.md\n', 'blue');
 

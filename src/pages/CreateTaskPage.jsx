@@ -5,12 +5,12 @@ import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 
 /**
- * CreateTaskPage - 创建任务页面
+ * CreateTaskPage - Create Task Page
  * 
- * 功能：
- * - 创建新任务
- * - 表单验证
- * - 标签管理
+ * Features:
+ * - Create new task
+ * - Form validation
+ * - Tag management
  */
 function CreateTaskPage() {
   const navigate = useNavigate();
@@ -30,19 +30,19 @@ function CreateTaskPage() {
   const [errors, setErrors] = useState({});
 
   /**
-   * 处理表单输入
+   * Handle form input
    */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    // 清除对应字段的错误
+    // Clear corresponding field error
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
   };
 
   /**
-   * 添加标签
+   * Add tag
    */
   const handleAddTag = (e) => {
     e.preventDefault();
@@ -57,7 +57,7 @@ function CreateTaskPage() {
   };
 
   /**
-   * 删除标签
+   * Remove tag
    */
   const handleRemoveTag = (tagToRemove) => {
     setFormData(prev => ({
@@ -67,19 +67,19 @@ function CreateTaskPage() {
   };
 
   /**
-   * 表单验证
+   * Form validation
    */
   const validateForm = () => {
     const newErrors = {};
 
     if (!formData.title.trim()) {
-      newErrors.title = '请输入任务标题';
+      newErrors.title = 'Please enter a task title';
     } else if (formData.title.length < 3) {
-      newErrors.title = '标题至少需要3个字符';
+      newErrors.title = 'Title must be at least 3 characters';
     }
 
     if (!formData.description.trim()) {
-      newErrors.description = '请输入任务描述';
+      newErrors.description = 'Please enter a task description';
     }
 
     setErrors(newErrors);
@@ -87,7 +87,7 @@ function CreateTaskPage() {
   };
 
   /**
-   * 提交表单
+   * Submit form
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,7 +101,7 @@ function CreateTaskPage() {
       const newTask = await createTask(formData);
       navigate(`/tasks/${newTask.id}`);
     } catch (err) {
-      alert('创建任务失败: ' + err.message);
+      alert('Failed to create task: ' + err.message);
     } finally {
       setLoading(false);
     }
@@ -109,22 +109,22 @@ function CreateTaskPage() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
-      {/* 返回按钮 */}
+      {/* Back Button */}
       <div>
         <Link to="/tasks">
           <Button variant="secondary" size="sm">
-            ← 返回列表
+            ← Back to List
           </Button>
         </Link>
       </div>
 
-      {/* 表单卡片 */}
-      <Card title="创建新任务">
+      {/* Form Card */}
+      <Card title="Create New Task">
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* 任务标题 */}
+          {/* Task Title */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              任务标题 <span className="text-red-500">*</span>
+              Task Title <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -132,36 +132,36 @@ function CreateTaskPage() {
               value={formData.title}
               onChange={handleInputChange}
               className={`input ${errors.title ? 'border-red-500' : ''}`}
-              placeholder="输入任务标题..."
+              placeholder="Enter task title..."
             />
             {errors.title && (
               <p className="mt-1 text-sm text-red-600">{errors.title}</p>
             )}
           </div>
 
-          {/* 任务描述 */}
+          {/* Task Description */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              任务描述 <span className="text-red-500">*</span>
+              Task Description <span className="text-red-500">*</span>
             </label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleInputChange}
               className={`input min-h-[120px] ${errors.description ? 'border-red-500' : ''}`}
-              placeholder="详细描述任务内容..."
+              placeholder="Describe the task in detail..."
             />
             {errors.description && (
               <p className="mt-1 text-sm text-red-600">{errors.description}</p>
             )}
           </div>
 
-          {/* 状态和优先级 */}
+          {/* Status and Priority */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* 状态 */}
+            {/* Status */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                状态
+                Status
               </label>
               <select
                 name="status"
@@ -169,16 +169,16 @@ function CreateTaskPage() {
                 onChange={handleInputChange}
                 className="input"
               >
-                <option value="pending">⏳ 待处理</option>
-                <option value="in-progress">🚀 进行中</option>
-                <option value="completed">✅ 已完成</option>
+                <option value="pending">⏳ Pending</option>
+                <option value="in-progress">🚀 In Progress</option>
+                <option value="completed">✅ Completed</option>
               </select>
             </div>
 
-            {/* 优先级 */}
+            {/* Priority */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                优先级
+                Priority
               </label>
               <select
                 name="priority"
@@ -186,17 +186,17 @@ function CreateTaskPage() {
                 onChange={handleInputChange}
                 className="input"
               >
-                <option value="high">🔥 高优先级</option>
-                <option value="medium">⚡ 中优先级</option>
-                <option value="low">📌 低优先级</option>
+                <option value="high">🔥 High Priority</option>
+                <option value="medium">⚡ Medium Priority</option>
+                <option value="low">📌 Low Priority</option>
               </select>
             </div>
           </div>
 
-          {/* 截止日期 */}
+          {/* Due Date */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              截止日期
+              Due Date
             </label>
             <input
               type="date"
@@ -208,10 +208,10 @@ function CreateTaskPage() {
             />
           </div>
 
-          {/* 标签 */}
+          {/* Tags */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              标签
+              Tags
             </label>
             <div className="flex gap-2 mb-3">
               <input
@@ -220,14 +220,14 @@ function CreateTaskPage() {
                 onChange={(e) => setTagInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleAddTag(e)}
                 className="input flex-1"
-                placeholder="输入标签后按回车..."
+                placeholder="Enter tag and press Enter..."
               />
               <Button
                 type="button"
                 variant="secondary"
                 onClick={handleAddTag}
               >
-                添加
+                Add
               </Button>
             </div>
             {formData.tags.length > 0 && (
@@ -251,7 +251,7 @@ function CreateTaskPage() {
             )}
           </div>
 
-          {/* 提交按钮 */}
+          {/* Submit Button */}
           <div className="flex gap-3 pt-6 border-t border-gray-200">
             <Button
               type="submit"
@@ -260,7 +260,7 @@ function CreateTaskPage() {
               disabled={loading}
               className="flex-1"
             >
-              {loading ? '创建中...' : '✅ 创建任务'}
+              {loading ? 'Creating...' : 'Create Task'}
             </Button>
             <Link to="/tasks" className="flex-1">
               <Button
@@ -269,14 +269,14 @@ function CreateTaskPage() {
                 fullWidth
                 disabled={loading}
               >
-                取消
+                Cancel
               </Button>
             </Link>
           </div>
         </form>
       </Card>
 
-      {/* 提示信息 */}
+      {/* Tips */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <div className="flex">
           <div className="flex-shrink-0">
@@ -293,12 +293,12 @@ function CreateTaskPage() {
             </svg>
           </div>
           <div className="ml-3">
-            <h3 className="text-sm font-medium text-blue-800">提示</h3>
+            <h3 className="text-sm font-medium text-blue-800">Tips</h3>
             <div className="mt-2 text-sm text-blue-700">
               <ul className="list-disc list-inside space-y-1">
-                <li>标题和描述是必填项</li>
-                <li>可以添加多个标签来分类任务</li>
-                <li>设置截止日期有助于更好地管理时间</li>
+                <li>Title and description are required fields</li>
+                <li>You can add multiple tags to categorize tasks</li>
+                <li>Setting a due date helps with time management</li>
               </ul>
             </div>
           </div>
@@ -309,4 +309,3 @@ function CreateTaskPage() {
 }
 
 export default CreateTaskPage;
-

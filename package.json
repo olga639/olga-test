@@ -1,7 +1,7 @@
 {
   "name": "castrel-webhook-demo",
   "version": "2.0.0",
-  "description": "React Chaos Engineering Demo - 混沌工程演练项目",
+  "description": "React Chaos Engineering Demo - Chaos Engineering Exercise Project",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -22,4 +22,3 @@
     "vite": "^5.1.0"
   }
 }
-

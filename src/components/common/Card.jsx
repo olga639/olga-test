@@ -1,15 +1,15 @@
 import React from 'react';
 
 /**
- * Card - 卡片组件
+ * Card - Card Component
  * 
  * @param {Object} props
- * @param {React.ReactNode} props.children - 卡片内容
- * @param {string} props.title - 卡片标题
- * @param {React.ReactNode} props.extra - 标题右侧额外内容
- * @param {boolean} props.hoverable - 是否启用悬停效果
- * @param {Function} props.onClick - 点击事件
- * @param {string} props.className - 额外的CSS类名
+ * @param {React.ReactNode} props.children - Card content
+ * @param {string} props.title - Card title
+ * @param {React.ReactNode} props.extra - Extra content on the right side of title
+ * @param {boolean} props.hoverable - Whether to enable hover effect
+ * @param {Function} props.onClick - Click event
+ * @param {string} props.className - Additional CSS class names
  */
 function Card({
   children,
@@ -26,7 +26,7 @@ function Card({
 
   return (
     <div className={cardStyles} onClick={onClick} {...rest}>
-      {/* 卡片头部 */}
+      {/* Card Header */}
       {(title || extra) && (
         <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
           {title && (
@@ -36,11 +36,10 @@ function Card({
         </div>
       )}
 
-      {/* 卡片内容 */}
+      {/* Card Content */}
       <div className="p-6">{children}</div>
     </div>
   );
 }
 
 export default Card;
-

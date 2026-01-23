@@ -1,18 +1,18 @@
 import React from 'react';
 
 /**
- * ErrorBoundary - 错误边界组件
+ * ErrorBoundary - Error Boundary Component
  * 
- * 功能：
- * - 捕获子组件树中的JavaScript错误
- * - 记录错误信息到控制台
- * - 显示友好的错误UI
- * - 提供错误恢复选项
+ * Features:
+ * - Catch JavaScript errors in child component tree
+ * - Log error information to console
+ * - Display friendly error UI
+ * - Provide error recovery options
  * 
- * 使用场景：
- * - 防止整个应用崩溃
- * - 在生产环境提供更好的用户体验
- * - 混沌工程中用于捕获注入的错误
+ * Use Cases:
+ * - Prevent entire application from crashing
+ * - Provide better user experience in production
+ * - Capture injected errors in chaos engineering
  */
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -26,39 +26,39 @@ class ErrorBoundary extends React.Component {
   }
 
   /**
-   * 当子组件抛出错误时调用
-   * 更新state以显示错误UI
+   * Called when child component throws an error
+   * Update state to display error UI
    */
   static getDerivedStateFromError(error) {
     return { hasError: true };
   }
 
   /**
-   * 捕获错误详细信息
-   * 记录错误日志
+   * Capture error details
+   * Log error information
    */
   componentDidCatch(error, errorInfo) {
-    // 记录错误到控制台
-    console.error('🚨 ErrorBoundary 捕获到错误:', error);
-    console.error('📍 错误位置:', errorInfo.componentStack);
+    // Log error to console
+    console.error('ErrorBoundary caught an error:', error);
+    console.error('Error location:', errorInfo.componentStack);
 
-    // 更新状态
+    // Update state
     this.setState(prevState => ({
       error,
       errorInfo,
       errorCount: prevState.errorCount + 1
     }));
 
-    // 在生产环境可以将错误发送到错误追踪服务
-    // 例如: Sentry, LogRocket等
+    // In production, errors can be sent to error tracking services
+    // e.g.: Sentry, LogRocket, etc.
     if (process.env.NODE_ENV === 'production') {
       // sendErrorToService(error, errorInfo);
     }
   }
 
   /**
-   * 重置错误状态
-   * 尝试恢复应用
+   * Reset error state
+   * Attempt to recover application
    */
   handleReset = () => {
     this.setState({
@@ -69,8 +69,8 @@ class ErrorBoundary extends React.Component {
   };
 
   /**
-   * 刷新页面
-   * 完全重置应用状态
+   * Refresh page
+   * Completely reset application state
    */
   handleReload = () => {
     window.location.reload();
@@ -81,7 +81,7 @@ class ErrorBoundary extends React.Component {
       return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
           <div className="max-w-2xl w-full bg-white rounded-lg shadow-xl p-8">
-            {/* 错误图标 */}
+            {/* Error Icon */}
             <div className="flex justify-center mb-6">
               <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center">
                 <svg
@@ -100,21 +100,21 @@ class ErrorBoundary extends React.Component {
               </div>
             </div>
 
-            {/* 错误标题 */}
+            {/* Error Title */}
             <h1 className="text-3xl font-bold text-gray-900 text-center mb-4">
-              哎呀！出错了
+              Oops! Something went wrong
             </h1>
 
-            {/* 错误描述 */}
+            {/* Error Description */}
             <p className="text-gray-600 text-center mb-6">
-              应用遇到了一个意外错误。这可能是由于代码问题或网络问题导致的。
+              The application encountered an unexpected error. This may be due to a code issue or network problem.
             </p>
 
-            {/* 错误详情（开发环境） */}
+            {/* Error Details (Development Environment) */}
             {process.env.NODE_ENV === 'development' && this.state.error && (
               <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
                 <h3 className="text-sm font-semibold text-red-800 mb-2">
-                  错误详情（仅开发环境可见）:
+                  Error Details (visible in development only):
                 </h3>
                 <pre className="text-xs text-red-700 overflow-x-auto whitespace-pre-wrap break-words">
                   {this.state.error.toString()}
@@ -122,7 +122,7 @@ class ErrorBoundary extends React.Component {
                 {this.state.errorInfo && (
                   <details className="mt-3">
                     <summary className="text-sm text-red-800 cursor-pointer hover:text-red-900">
-                      查看组件堆栈
+                      View Component Stack
                     </summary>
                     <pre className="mt-2 text-xs text-red-600 overflow-x-auto whitespace-pre-wrap">
                       {this.state.errorInfo.componentStack}
@@ -132,43 +132,43 @@ class ErrorBoundary extends React.Component {
               </div>
             )}
 
-            {/* 错误统计 */}
+            {/* Error Statistics */}
             {this.state.errorCount > 1 && (
               <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                 <p className="text-sm text-yellow-800">
-                  ⚠️ 此错误已发生 <strong>{this.state.errorCount}</strong> 次
+                  This error has occurred <strong>{this.state.errorCount}</strong> times
                 </p>
               </div>
             )}
 
-            {/* 操作按钮 */}
+            {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
                 onClick={this.handleReset}
                 className="btn btn-primary px-6 py-3"
               >
-                尝试恢复
+                Try to Recover
               </button>
               <button
                 onClick={this.handleReload}
                 className="btn btn-secondary px-6 py-3"
               >
-                刷新页面
+                Refresh Page
               </button>
               <button
                 onClick={() => window.history.back()}
                 className="btn btn-secondary px-6 py-3"
               >
-                返回上一页
+                Go Back
               </button>
             </div>
 
-            {/* 帮助信息 */}
+            {/* Help Information */}
             <div className="mt-8 pt-6 border-t border-gray-200">
               <p className="text-sm text-gray-500 text-center">
-                如果问题持续存在，请联系技术支持或
+                If the problem persists, please contact technical support or
                 <a href="/" className="text-primary-600 hover:text-primary-700 ml-1">
-                  返回首页
+                  return to home page
                 </a>
               </p>
             </div>
@@ -182,4 +182,3 @@ class ErrorBoundary extends React.Component {
 }
 
 export default ErrorBoundary;
-

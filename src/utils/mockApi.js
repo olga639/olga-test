@@ -1,141 +1,141 @@
 /**
- * Mock API - 模拟后端API
+ * Mock API - Simulated Backend API
  * 
- * 功能：
- * - 模拟异步请求
- * - 提供CRUD操作
- * - 模拟网络延迟
- * - 模拟错误场景
+ * Features:
+ * - Simulate async requests
+ * - Provide CRUD operations
+ * - Simulate network delay
+ * - Simulate error scenarios
  */
 
-// 模拟数据存储
+// Mock data storage
 let mockTasks = [
   {
     id: '1',
-    title: '完成项目文档',
-    description: '编写项目的技术文档和用户手册，包括架构设计、API文档和部署指南。',
+    title: 'Complete Project Documentation',
+    description: 'Write technical documentation and user manuals for the project, including architecture design, API documentation, and deployment guide.',
     status: 'in-progress',
     priority: 'high',
     dueDate: '2026-01-20',
-    tags: ['文档', '重要'],
+    tags: ['Documentation', 'Important'],
     createdAt: '2026-01-10T08:00:00Z',
     updatedAt: '2026-01-14T10:30:00Z'
   },
   {
     id: '2',
-    title: '修复登录页面bug',
-    description: '用户反馈登录页面在某些浏览器上无法正常显示，需要排查并修复兼容性问题。',
+    title: 'Fix Login Page Bug',
+    description: 'Users reported that the login page does not display correctly in some browsers. Need to investigate and fix compatibility issues.',
     status: 'pending',
     priority: 'high',
     dueDate: '2026-01-16',
-    tags: ['bug', '前端'],
+    tags: ['Bug', 'Frontend'],
     createdAt: '2026-01-12T09:15:00Z',
     updatedAt: '2026-01-12T09:15:00Z'
   },
   {
     id: '3',
-    title: '优化数据库查询性能',
-    description: '分析慢查询日志，优化数据库索引和查询语句，提升系统整体性能。',
+    title: 'Optimize Database Query Performance',
+    description: 'Analyze slow query logs, optimize database indexes and query statements to improve overall system performance.',
     status: 'pending',
     priority: 'medium',
     dueDate: '2026-01-25',
-    tags: ['性能', '后端', '数据库'],
+    tags: ['Performance', 'Backend', 'Database'],
     createdAt: '2026-01-11T14:20:00Z',
     updatedAt: '2026-01-11T14:20:00Z'
   },
   {
     id: '4',
-    title: '设计新功能UI',
-    description: '为即将上线的新功能设计用户界面，包括交互流程和视觉设计。',
+    title: 'Design New Feature UI',
+    description: 'Design user interface for upcoming new features, including interaction flow and visual design.',
     status: 'in-progress',
     priority: 'medium',
     dueDate: '2026-01-22',
-    tags: ['设计', 'UI'],
+    tags: ['Design', 'UI'],
     createdAt: '2026-01-13T11:00:00Z',
     updatedAt: '2026-01-14T15:45:00Z'
   },
   {
     id: '5',
-    title: '代码审查',
-    description: '审查团队成员提交的代码，确保代码质量和规范性。',
+    title: 'Code Review',
+    description: 'Review code submitted by team members to ensure code quality and standards compliance.',
     status: 'completed',
     priority: 'low',
     dueDate: '2026-01-15',
-    tags: ['代码审查', '团队'],
+    tags: ['Code Review', 'Team'],
     createdAt: '2026-01-10T10:00:00Z',
     updatedAt: '2026-01-15T16:00:00Z'
   },
   {
     id: '6',
-    title: '准备技术分享',
-    description: '准备下周的技术分享会议，主题是React性能优化最佳实践。',
+    title: 'Prepare Tech Sharing Session',
+    description: 'Prepare for next week\'s tech sharing meeting, topic is React performance optimization best practices.',
     status: 'pending',
     priority: 'low',
     dueDate: '2026-01-28',
-    tags: ['分享', '学习'],
+    tags: ['Sharing', 'Learning'],
     createdAt: '2026-01-14T09:00:00Z',
     updatedAt: '2026-01-14T09:00:00Z'
   },
   {
     id: '7',
-    title: '更新依赖包',
-    description: '检查并更新项目中的npm依赖包，修复安全漏洞。',
+    title: 'Update Dependencies',
+    description: 'Check and update npm dependencies in the project, fix security vulnerabilities.',
     status: 'completed',
     priority: 'medium',
     dueDate: '2026-01-14',
-    tags: ['维护', '安全'],
+    tags: ['Maintenance', 'Security'],
     createdAt: '2026-01-08T13:30:00Z',
     updatedAt: '2026-01-14T11:00:00Z'
   },
   {
     id: '8',
-    title: '实现用户权限系统',
-    description: '开发基于角色的权限控制系统，支持多种用户角色和权限配置。',
+    title: 'Implement User Permission System',
+    description: 'Develop role-based access control system, support multiple user roles and permission configurations.',
     status: 'in-progress',
     priority: 'high',
     dueDate: '2026-01-30',
-    tags: ['功能', '后端', '安全'],
+    tags: ['Feature', 'Backend', 'Security'],
     createdAt: '2026-01-09T08:45:00Z',
     updatedAt: '2026-01-14T14:20:00Z'
   }
 ];
 
-// 模拟网络延迟
+// Simulate network delay
 const delay = (ms = 500) => new Promise(resolve => setTimeout(resolve, ms));
 
-// 生成唯一ID
+// Generate unique ID
 const generateId = () => Date.now().toString() + Math.random().toString(36).substr(2, 9);
 
 /**
- * Mock API对象
+ * Mock API Object
  */
 export const mockApi = {
   /**
-   * 获取所有任务
+   * Get all tasks
    * 
-   * @param {Object} options - 查询选项
-   * @param {string} options.status - 按状态筛选
-   * @param {string} options.priority - 按优先级筛选
-   * @param {string} options.sortBy - 排序字段
-   * @param {string} options.order - 排序顺序 (asc/desc)
-   * @returns {Promise<Array>} 任务列表
+   * @param {Object} options - Query options
+   * @param {string} options.status - Filter by status
+   * @param {string} options.priority - Filter by priority
+   * @param {string} options.sortBy - Sort field
+   * @param {string} options.order - Sort order (asc/desc)
+   * @returns {Promise<Array>} Task list
    */
   async getTasks(options = {}) {
     await delay(300);
 
     let result = [...mockTasks];
 
-    // 按状态筛选
+    // Filter by status
     if (options.status) {
       result = result.filter(task => task.status === options.status);
     }
 
-    // 按优先级筛选
+    // Filter by priority
     if (options.priority) {
       result = result.filter(task => task.priority === options.priority);
     }
 
-    // 排序
+    // Sort
     if (options.sortBy) {
       result.sort((a, b) => {
         const aVal = a[options.sortBy];
@@ -149,35 +149,35 @@ export const mockApi = {
   },
 
   /**
-   * 根据ID获取任务
+   * Get task by ID
    * 
-   * @param {string} id - 任务ID
-   * @returns {Promise<Object>} 任务对象
-   * @throws {Error} 任务不存在时抛出错误
+   * @param {string} id - Task ID
+   * @returns {Promise<Object>} Task object
+   * @throws {Error} Throws error if task does not exist
    */
   async getTaskById(id) {
     await delay(200);
 
     const task = mockTasks.find(t => t.id === id);
     if (!task) {
-      throw new Error(`任务 ID ${id} 不存在`);
+      throw new Error(`Task ID ${id} does not exist`);
     }
 
     return { ...task };
   },
 
   /**
-   * 创建新任务
+   * Create new task
    * 
-   * @param {Object} taskData - 任务数据
-   * @returns {Promise<Object>} 创建的任务对象
+   * @param {Object} taskData - Task data
+   * @returns {Promise<Object>} Created task object
    */
   async createTask(taskData) {
     await delay(400);
 
     const newTask = {
       id: generateId(),
-      title: taskData.title || '未命名任务',
+      title: taskData.title || 'Untitled Task',
       description: taskData.description || '',
       status: taskData.status || 'pending',
       priority: taskData.priority || 'medium',
@@ -192,19 +192,19 @@ export const mockApi = {
   },
 
   /**
-   * 更新任务
+   * Update task
    * 
-   * @param {string} id - 任务ID
-   * @param {Object} updates - 更新的数据
-   * @returns {Promise<Object>} 更新后的任务对象
-   * @throws {Error} 任务不存在时抛出错误
+   * @param {string} id - Task ID
+   * @param {Object} updates - Update data
+   * @returns {Promise<Object>} Updated task object
+   * @throws {Error} Throws error if task does not exist
    */
   async updateTask(id, updates) {
     await delay(300);
 
     const index = mockTasks.findIndex(t => t.id === id);
     if (index === -1) {
-      throw new Error(`任务 ID ${id} 不存在`);
+      throw new Error(`Task ID ${id} does not exist`);
     }
 
     const updatedTask = {
@@ -218,28 +218,28 @@ export const mockApi = {
   },
 
   /**
-   * 删除任务
+   * Delete task
    * 
-   * @param {string} id - 任务ID
+   * @param {string} id - Task ID
    * @returns {Promise<void>}
-   * @throws {Error} 任务不存在时抛出错误
+   * @throws {Error} Throws error if task does not exist
    */
   async deleteTask(id) {
     await delay(300);
 
     const index = mockTasks.findIndex(t => t.id === id);
     if (index === -1) {
-      throw new Error(`任务 ID ${id} 不存在`);
+      throw new Error(`Task ID ${id} does not exist`);
     }
 
     mockTasks.splice(index, 1);
   },
 
   /**
-   * 批量删除任务
+   * Batch delete tasks
    * 
-   * @param {Array<string>} ids - 任务ID数组
-   * @returns {Promise<number>} 删除的任务数量
+   * @param {Array<string>} ids - Array of task IDs
+   * @returns {Promise<number>} Number of deleted tasks
    */
   async batchDeleteTasks(ids) {
     await delay(500);
@@ -250,10 +250,10 @@ export const mockApi = {
   },
 
   /**
-   * 搜索任务
+   * Search tasks
    * 
-   * @param {string} query - 搜索关键词
-   * @returns {Promise<Array>} 搜索结果
+   * @param {string} query - Search keyword
+   * @returns {Promise<Array>} Search results
    */
   async searchTasks(query) {
     await delay(250);
@@ -272,9 +272,9 @@ export const mockApi = {
   },
 
   /**
-   * 获取任务统计信息
+   * Get task statistics
    * 
-   * @returns {Promise<Object>} 统计信息
+   * @returns {Promise<Object>} Statistics information
    */
   async getTaskStats() {
     await delay(200);
@@ -296,4 +296,3 @@ export const mockApi = {
 };
 
 export default mockApi;
-

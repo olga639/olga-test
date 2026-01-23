@@ -1,13 +1,13 @@
 import React from 'react';
 
 /**
- * Badge - 徽章组件
+ * Badge - Badge Component
  * 
  * @param {Object} props
- * @param {React.ReactNode} props.children - 徽章内容
- * @param {'success'|'warning'|'danger'|'info'|'default'} props.variant - 徽章样式
- * @param {'sm'|'md'|'lg'} props.size - 徽章大小
- * @param {string} props.className - 额外的CSS类名
+ * @param {React.ReactNode} props.children - Badge content
+ * @param {'success'|'warning'|'danger'|'info'|'default'} props.variant - Badge style
+ * @param {'sm'|'md'|'lg'} props.size - Badge size
+ * @param {string} props.className - Additional CSS class names
  */
 function Badge({
   children,
@@ -15,10 +15,10 @@ function Badge({
   size = 'md',
   className = ''
 }) {
-  // 基础样式
+  // Base styles
   const baseStyles = 'inline-flex items-center rounded-full font-medium';
 
-  // 变体样式
+  // Variant styles
   const variantStyles = {
     success: 'bg-green-100 text-green-800',
     warning: 'bg-yellow-100 text-yellow-800',
@@ -27,7 +27,7 @@ function Badge({
     default: 'bg-gray-100 text-gray-800'
   };
 
-  // 尺寸样式
+  // Size styles
   const sizeStyles = {
     sm: 'px-2 py-0.5 text-xs',
     md: 'px-3 py-1 text-sm',
@@ -40,4 +40,3 @@ function Badge({
 }
 
 export default Badge;
-

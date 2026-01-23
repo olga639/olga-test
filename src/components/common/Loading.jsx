@@ -1,21 +1,21 @@
 import React from 'react';
 
 /**
- * Loading - 加载指示器组件
+ * Loading - Loading Indicator Component
  * 
  * @param {Object} props
- * @param {'sm'|'md'|'lg'} props.size - 加载器大小
- * @param {string} props.text - 加载文本
- * @param {boolean} props.fullScreen - 是否全屏显示
- * @param {string} props.className - 额外的CSS类名
+ * @param {'sm'|'md'|'lg'} props.size - Loader size
+ * @param {string} props.text - Loading text
+ * @param {boolean} props.fullScreen - Whether to display fullscreen
+ * @param {string} props.className - Additional CSS class names
  */
 function Loading({
   size = 'md',
-  text = '加载中...',
+  text = 'Loading...',
   fullScreen = false,
   className = ''
 }) {
-  // 尺寸映射
+  // Size mapping
   const sizeMap = {
     sm: 'w-8 h-8',
     md: 'w-12 h-12',
@@ -24,7 +24,7 @@ function Loading({
 
   const spinnerSize = sizeMap[size];
 
-  // 加载器组件
+  // Loader component
   const spinner = (
     <div className="flex flex-col items-center justify-center">
       <div
@@ -36,7 +36,7 @@ function Loading({
     </div>
   );
 
-  // 全屏模式
+  // Fullscreen mode
   if (fullScreen) {
     return (
       <div className="fixed inset-0 bg-white bg-opacity-90 flex items-center justify-center z-50">
@@ -45,13 +45,13 @@ function Loading({
     );
   }
 
-  // 普通模式
+  // Normal mode
   return <div className={`flex items-center justify-center p-8 ${className}`}>{spinner}</div>;
 }
 
 /**
- * LoadingOverlay - 加载遮罩层组件
- * 用于在内容上方显示加载状态
+ * LoadingOverlay - Loading Overlay Component
+ * Used to display loading state above content
  */
 export function LoadingOverlay({ loading, children }) {
   return (
@@ -67,8 +67,8 @@ export function LoadingOverlay({ loading, children }) {
 }
 
 /**
- * LoadingSkeleton - 骨架屏组件
- * 用于显示内容加载占位符
+ * LoadingSkeleton - Skeleton Screen Component
+ * Used to display content loading placeholders
  */
 export function LoadingSkeleton({ rows = 3, className = '' }) {
   return (
@@ -84,4 +84,3 @@ export function LoadingSkeleton({ rows = 3, className = '' }) {
 }
 
 export default Loading;
-

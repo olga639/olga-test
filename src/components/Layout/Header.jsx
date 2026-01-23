@@ -2,28 +2,28 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 /**
- * Header - 顶部导航组件
+ * Header - Top Navigation Component
  * 
- * 功能：
- * - 显示应用Logo和标题
- * - 导航菜单（桌面端和移动端）
- * - 响应式设计
- * - 当前路由高亮
+ * Features:
+ * - Display app logo and title
+ * - Navigation menu (desktop and mobile)
+ * - Responsive design
+ * - Current route highlighting
  */
 function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
 
-  // 导航菜单项
+  // Navigation menu items
   const navItems = [
-    { path: '/', label: '首页', icon: '🏠' },
-    { path: '/tasks', label: '任务列表', icon: '📋' },
-    { path: '/tasks/create', label: '创建任务', icon: '➕' },
-    { path: '/about', label: '关于', icon: 'ℹ️' }
+    { path: '/', label: 'Home', icon: '🏠' },
+    { path: '/tasks', label: 'Task List', icon: '📋' },
+    { path: '/tasks/create', label: 'Create Task', icon: '➕' },
+    { path: '/about', label: 'About', icon: 'ℹ️' }
   ];
 
   /**
-   * 判断是否为当前路由
+   * Check if current route
    */
   const isActive = (path) => {
     if (path === '/') {
@@ -33,14 +33,14 @@ function Header() {
   };
 
   /**
-   * 切换移动端菜单
+   * Toggle mobile menu
    */
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
   /**
-   * 关闭移动端菜单
+   * Close mobile menu
    */
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
@@ -50,7 +50,7 @@ function Header() {
     <header className="bg-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex items-center justify-between h-16">
-          {/* Logo和标题 */}
+          {/* Logo and Title */}
           <Link
             to="/"
             className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
@@ -61,11 +61,11 @@ function Header() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-gray-900">TaskFlow</h1>
-              <p className="text-xs text-gray-500">任务管理系统</p>
+              <p className="text-xs text-gray-500">Task Management System</p>
             </div>
           </Link>
 
-          {/* 桌面端导航 */}
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => (
               <Link
@@ -86,11 +86,11 @@ function Header() {
             ))}
           </nav>
 
-          {/* 移动端菜单按钮 */}
+          {/* Mobile Menu Button */}
           <button
             onClick={toggleMobileMenu}
             className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            aria-label="切换菜单"
+            aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (
               <svg
@@ -124,7 +124,7 @@ function Header() {
           </button>
         </div>
 
-        {/* 移动端导航菜单 */}
+        {/* Mobile Navigation Menu */}
         {mobileMenuOpen && (
           <nav className="md:hidden py-4 border-t border-gray-200 animate-fade-in">
             {navItems.map((item) => (
@@ -153,4 +153,3 @@ function Header() {
 }
 
 export default Header;
-

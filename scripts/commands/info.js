@@ -1,10 +1,10 @@
 /**
- * Info Command - 信息命令
+ * Info Command - Information Command
  * 
- * 功能：
- * - 显示指定故障类型的详细信息
- * - 显示模板内容预览
- * - 显示影响范围
+ * Features:
+ * - Display detailed information for specified fault type
+ * - Display template content preview
+ * - Display affected scope
  */
 
 import { getFaultConfig } from '../config/faultRegistry.js';
@@ -14,102 +14,102 @@ import logger from '../core/logger.js';
 
 export default async function info(args) {
   try {
-    // 解析参数
+    // Parse arguments
     const typeIndex = args.indexOf('--type');
     if (typeIndex === -1 || !args[typeIndex + 1]) {
-      logger.error('缺少参数: --type');
-      logger.tip('使用方法: npm run chaos info --type <fault-type>');
+      logger.error('Missing parameter: --type');
+      logger.tip('Usage: npm run chaos info --type <fault-type>');
       process.exit(1);
     }
 
     const faultType = args[typeIndex + 1];
 
-    // 验证故障类型
+    // Validate fault type
     const faultConfig = getFaultConfig(faultType);
     if (!faultConfig) {
-      logger.error(`故障类型不存在: ${faultType}`);
-      logger.tip('使用 "npm run chaos list" 查看所有可用的故障类型');
+      logger.error(`Fault type does not exist: ${faultType}`);
+      logger.tip('Use "npm run chaos list" to view all available fault types');
       process.exit(1);
     }
 
     logger.newLine();
-    logger.title(`📖 故障详情: ${faultConfig.name}`);
+    logger.title(`Fault Details: ${faultConfig.name}`);
     logger.newLine();
 
-    // 基本信息
-    logger.log('🏷️  基本信息');
-    logger.listItem(`类型ID: ${faultType}`);
-    logger.listItem(`名称: ${faultConfig.name}`);
-    logger.listItem(`分类: ${faultConfig.category}`);
-    logger.listItem(`严重程度: ${faultConfig.severity}`);
+    // Basic information
+    logger.log('Basic Information');
+    logger.listItem(`Type ID: ${faultType}`);
+    logger.listItem(`Name: ${faultConfig.name}`);
+    logger.listItem(`Category: ${faultConfig.category}`);
+    logger.listItem(`Severity: ${faultConfig.severity}`);
     logger.newLine();
 
-    // 描述
-    logger.log('📝 描述');
+    // Description
+    logger.log('Description');
     logger.listItem(faultConfig.description);
     logger.newLine();
 
-    // 影响范围
-    logger.log('🎯 影响范围');
-    logger.listItem(`目标文件: ${faultConfig.targetFiles.length} 个`);
+    // Affected scope
+    logger.log('Affected Scope');
+    logger.listItem(`Target Files: ${faultConfig.targetFiles.length}`);
     faultConfig.targetFiles.forEach(file => {
       logger.listItem(file, 1);
     });
     logger.newLine();
 
-    // 预期结果
-    logger.log('⚠️  预期结果');
-    logger.listItem(`预期错误: ${faultConfig.expectedError}`);
-    logger.listItem(`构建失败: ${faultConfig.buildFails ? '是 ❌' : '否 ✅'}`);
-    logger.listItem(`运行时失败: ${faultConfig.runtimeFails ? '是 ❌' : '否 ✅'}`);
+    // Expected result
+    logger.log('Expected Result');
+    logger.listItem(`Expected Error: ${faultConfig.expectedError}`);
+    logger.listItem(`Build Fails: ${faultConfig.buildFails ? 'Yes' : 'No'}`);
+    logger.listItem(`Runtime Fails: ${faultConfig.runtimeFails ? 'Yes' : 'No'}`);
     logger.newLine();
 
-    // 模板信息
-    logger.log('📄 模板信息');
-    logger.listItem(`模板文件: ${faultConfig.templateFile}`);
+    // Template information
+    logger.log('Template Information');
+    logger.listItem(`Template File: ${faultConfig.templateFile}`);
     
     if (fileManager.fileExists(faultConfig.templateFile)) {
-      logger.listItem('模板状态: 存在 ✅');
+      logger.listItem('Template Status: Exists');
       
-      // 加载并显示模板预览
+      // Load and display template preview
       try {
         const template = loadTemplate(faultConfig.templateFile);
         const lines = template.content.split('\n');
         const previewLines = lines.slice(0, 15);
         
         logger.newLine();
-        logger.log('📋 模板预览 (前15行):');
+        logger.log('Template Preview (first 15 lines):');
         logger.divider();
         previewLines.forEach((line, index) => {
           logger.code(`${(index + 1).toString().padStart(3, ' ')} | ${line}`);
         });
         if (lines.length > 15) {
-          logger.code('... (更多内容请查看模板文件)');
+          logger.code('... (see template file for more)');
         }
         logger.divider();
       } catch (error) {
-        logger.listItem(`模板加载失败: ${error.message}`, 1);
+        logger.listItem(`Template load failed: ${error.message}`, 1);
       }
     } else {
-      logger.listItem('模板状态: 不存在 ❌');
+      logger.listItem('Template Status: Not Found');
     }
     logger.newLine();
 
-    // 使用说明
-    logger.title('💡 使用说明');
+    // Usage instructions
+    logger.title('Usage Instructions');
     logger.newLine();
     
-    logger.log('1️⃣  注入此故障:');
+    logger.log('1. Inject this fault:');
     logger.code(`   npm run chaos inject --type ${faultType}`);
     logger.newLine();
     
-    logger.log('2️⃣  提交并推送代码');
+    logger.log('2. Commit and push code');
     logger.newLine();
     
-    logger.log('3️⃣  观察部署结果');
+    logger.log('3. Observe deployment result');
     logger.newLine();
     
-    logger.log('4️⃣  恢复正常:');
+    logger.log('4. Restore to normal:');
     logger.code(`   npm run chaos restore`);
     logger.newLine();
 
@@ -118,7 +118,7 @@ export default async function info(args) {
 
   } catch (error) {
     logger.newLine();
-    logger.error(`获取故障信息失败: ${error.message}`);
+    logger.error(`Failed to get fault information: ${error.message}`);
     logger.newLine();
     
     if (process.env.DEBUG) {
@@ -128,4 +128,3 @@ export default async function info(args) {
     process.exit(1);
   }
 }
-

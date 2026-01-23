@@ -6,13 +6,13 @@ import Loading from '../components/common/Loading';
 import { Link } from 'react-router-dom';
 
 /**
- * TaskListPage - 任务列表页面
+ * TaskListPage - Task List Page
  * 
- * 功能：
- * - 展示所有任务
- * - 筛选和排序
- * - 搜索功能
- * - 批量操作
+ * Features:
+ * - Display all tasks
+ * - Filter and sort
+ * - Search functionality
+ * - Batch operations
  */
 function TaskListPage() {
   const {
@@ -30,29 +30,29 @@ function TaskListPage() {
   const [sortBy, setSortBy] = useState('createdAt');
 
   /**
-   * 处理搜索
+   * Handle search
    */
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
 
   /**
-   * 获取筛选后的任务
+   * Get filtered tasks
    */
   const getFilteredTasks = () => {
     let filtered = searchQuery ? searchTasks(searchQuery) : tasks;
 
-    // 按状态筛选
+    // Filter by status
     if (filterStatus !== 'all') {
       filtered = filtered.filter(task => task.status === filterStatus);
     }
 
-    // 按优先级筛选
+    // Filter by priority
     if (filterPriority !== 'all') {
       filtered = filtered.filter(task => task.priority === filterPriority);
     }
 
-    // 排序
+    // Sort
     filtered = [...filtered].sort((a, b) => {
       if (sortBy === 'createdAt') {
         return new Date(b.createdAt) - new Date(a.createdAt);
@@ -75,48 +75,48 @@ function TaskListPage() {
   const filteredTasks = getFilteredTasks();
 
   if (loading && tasks.length === 0) {
-    return <Loading fullScreen text="加载任务列表..." />;
+    return <Loading fullScreen text="Loading task list..." />;
   }
 
   if (error) {
     return (
       <div className="text-center py-12">
         <div className="text-red-600 text-xl mb-4">❌ {error}</div>
-        <Button onClick={() => window.location.reload()}>重新加载</Button>
+        <Button onClick={() => window.location.reload()}>Reload</Button>
       </div>
     );
   }
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* 页面标题 */}
+      {/* Page Title */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">任务列表</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Task List</h1>
           <p className="text-gray-600 mt-1">
-            共 {filteredTasks.length} 个任务
-            {searchQuery && ` (搜索: "${searchQuery}")`}
+            {filteredTasks.length} tasks total
+            {searchQuery && ` (Search: "${searchQuery}")`}
           </p>
         </div>
         <Link to="/tasks/create">
           <Button variant="primary" size="lg">
-            ➕ 创建新任务
+            + Create New Task
           </Button>
         </Link>
       </div>
 
-      {/* 筛选和搜索栏 */}
+      {/* Filter and Search Bar */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          {/* 搜索框 */}
+          {/* Search Box */}
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              搜索任务
+              Search Tasks
             </label>
             <div className="relative">
               <input
                 type="text"
-                placeholder="搜索标题、描述或标签..."
+                placeholder="Search title, description or tags..."
                 value={searchQuery}
                 onChange={handleSearch}
                 className="input pl-10"
@@ -137,44 +137,44 @@ function TaskListPage() {
             </div>
           </div>
 
-          {/* 状态筛选 */}
+          {/* Status Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              状态
+              Status
             </label>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
               className="input"
             >
-              <option value="all">全部状态</option>
-              <option value="pending">待处理</option>
-              <option value="in-progress">进行中</option>
-              <option value="completed">已完成</option>
+              <option value="all">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="in-progress">In Progress</option>
+              <option value="completed">Completed</option>
             </select>
           </div>
 
-          {/* 优先级筛选 */}
+          {/* Priority Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              优先级
+              Priority
             </label>
             <select
               value={filterPriority}
               onChange={(e) => setFilterPriority(e.target.value)}
               className="input"
             >
-              <option value="all">全部优先级</option>
-              <option value="high">高优先级</option>
-              <option value="medium">中优先级</option>
-              <option value="low">低优先级</option>
+              <option value="all">All Priorities</option>
+              <option value="high">High Priority</option>
+              <option value="medium">Medium Priority</option>
+              <option value="low">Low Priority</option>
             </select>
           </div>
         </div>
 
-        {/* 排序选项 */}
+        {/* Sort Options */}
         <div className="mt-4 flex items-center gap-4">
-          <span className="text-sm font-medium text-gray-700">排序:</span>
+          <span className="text-sm font-medium text-gray-700">Sort:</span>
           <div className="flex gap-2">
             <button
               onClick={() => setSortBy('createdAt')}
@@ -184,7 +184,7 @@ function TaskListPage() {
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              创建时间
+              Created Date
             </button>
             <button
               onClick={() => setSortBy('dueDate')}
@@ -194,7 +194,7 @@ function TaskListPage() {
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              截止日期
+              Due Date
             </button>
             <button
               onClick={() => setSortBy('priority')}
@@ -204,13 +204,13 @@ function TaskListPage() {
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
             >
-              优先级
+              Priority
             </button>
           </div>
         </div>
       </div>
 
-      {/* 任务列表 */}
+      {/* Task List */}
       {filteredTasks.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredTasks.map((task) => (
@@ -226,16 +226,16 @@ function TaskListPage() {
         <div className="bg-white rounded-lg shadow-md p-12 text-center">
           <div className="text-6xl mb-4">🔍</div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
-            没有找到任务
+            No Tasks Found
           </h3>
           <p className="text-gray-600 mb-6">
             {searchQuery
-              ? '尝试调整搜索条件或筛选器'
-              : '还没有创建任何任务'}
+              ? 'Try adjusting your search or filters'
+              : 'No tasks created yet'}
           </p>
           {!searchQuery && (
             <Link to="/tasks/create">
-              <Button variant="primary">创建第一个任务</Button>
+              <Button variant="primary">Create First Task</Button>
             </Link>
           )}
         </div>
@@ -245,4 +245,3 @@ function TaskListPage() {
 }
 
 export default TaskListPage;
-

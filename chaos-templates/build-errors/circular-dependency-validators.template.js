@@ -1,39 +1,38 @@
 /**
  * @fault-type: circular-dependency
  * @category: build-errors
- * @description: validators 反向依赖 helpers，形成循环依赖
+ * @description: validators reverse dependency on helpers, forming circular dependency
  * @expected-error: Circular dependency detected
  * @target-file: src/utils/validators.js
  * @severity: medium
  */
 
 /**
- * validators.js - 配合circular-dependency故障的辅助文件
- * 这个文件会被创建在 src/utils/validators.js
- * 它会导入 helpers.js，形成循环依赖
+ * validators.js - Helper file for circular-dependency fault
+ * This file will be created at src/utils/validators.js
+ * It imports helpers.js, forming circular dependency
  */
 
-// 🔴 循环依赖：validators.js 导入 helpers.js
+// ERROR: Circular dependency: validators.js imports helpers.js
 import { formatTaskData } from './helpers';
 
 /**
- * 验证任务数据
+ * Validate task data
  */
 export function validateTaskData(task) {
   if (!task || typeof task !== 'object') {
     return false;
   }
   
-  // 这里又使用了helpers中的函数，加剧循环依赖
+  // Using function from helpers here, intensifying circular dependency
   const formatted = formatTaskData(task);
   
   return !!(task.title && task.status);
 }
 
 /**
- * 验证任务标题
+ * Validate task title
  */
 export function validateTitle(title) {
   return typeof title === 'string' && title.trim().length > 0;
 }
-

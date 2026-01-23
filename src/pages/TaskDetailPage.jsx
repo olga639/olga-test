@@ -7,13 +7,13 @@ import Loading from '../components/common/Loading';
 import Card from '../components/common/Card';
 
 /**
- * TaskDetailPage - 任务详情页面
+ * TaskDetailPage - Task Detail Page
  * 
- * 功能：
- * - 显示任务完整信息
- * - 编辑任务
- * - 删除任务
- * - 切换状态
+ * Features:
+ * - Display complete task information
+ * - Edit task
+ * - Delete task
+ * - Toggle status
  */
 function TaskDetailPage() {
   const { id } = useParams();
@@ -26,7 +26,7 @@ function TaskDetailPage() {
   const [editing, setEditing] = useState(false);
   const [formData, setFormData] = useState({});
 
-  // 加载任务详情
+  // Load task details
   useEffect(() => {
     loadTask();
   }, [id]);
@@ -39,14 +39,14 @@ function TaskDetailPage() {
       setTask(data);
       setFormData(data);
     } catch (err) {
-      setError(err.message || '加载任务失败');
+      setError(err.message || 'Failed to load task');
     } finally {
       setLoading(false);
     }
   };
 
   /**
-   * 处理表单输入
+   * Handle form input
    */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -54,7 +54,7 @@ function TaskDetailPage() {
   };
 
   /**
-   * 保存编辑
+   * Save edits
    */
   const handleSave = async () => {
     try {
@@ -62,12 +62,12 @@ function TaskDetailPage() {
       setTask(updated);
       setEditing(false);
     } catch (err) {
-      alert('保存失败: ' + err.message);
+      alert('Save failed: ' + err.message);
     }
   };
 
   /**
-   * 取消编辑
+   * Cancel editing
    */
   const handleCancel = () => {
     setFormData(task);
@@ -75,43 +75,43 @@ function TaskDetailPage() {
   };
 
   /**
-   * 删除任务
+   * Delete task
    */
   const handleDelete = async () => {
-    if (window.confirm(`确定要删除任务"${task.title}"吗？`)) {
+    if (window.confirm(`Are you sure you want to delete "${task.title}"?`)) {
       try {
         await deleteTask(id);
         navigate('/tasks');
       } catch (err) {
-        alert('删除失败: ' + err.message);
+        alert('Delete failed: ' + err.message);
       }
     }
   };
 
   /**
-   * 切换状态
+   * Toggle status
    */
   const handleToggleStatus = async () => {
     try {
       const updated = await toggleTaskStatus(id);
       setTask(updated);
     } catch (err) {
-      alert('更新状态失败: ' + err.message);
+      alert('Status update failed: ' + err.message);
     }
   };
 
   if (loading) {
-    return <Loading fullScreen text="加载任务详情..." />;
+    return <Loading fullScreen text="Loading task details..." />;
   }
 
   if (error) {
     return (
       <div className="text-center py-12">
         <div className="text-6xl mb-4">😕</div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">任务不存在</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Task Not Found</h2>
         <p className="text-gray-600 mb-6">{error}</p>
         <Link to="/tasks">
-          <Button variant="primary">返回任务列表</Button>
+          <Button variant="primary">Back to Task List</Button>
         </Link>
       </div>
     );
@@ -119,18 +119,18 @@ function TaskDetailPage() {
 
   if (!task) return null;
 
-  // 优先级配置
+  // Priority configuration
   const priorityConfig = {
-    high: { label: '高优先级', variant: 'danger', icon: '🔥' },
-    medium: { label: '中优先级', variant: 'warning', icon: '⚡' },
-    low: { label: '低优先级', variant: 'info', icon: '📌' }
+    high: { label: 'High Priority', variant: 'danger', icon: '🔥' },
+    medium: { label: 'Medium Priority', variant: 'warning', icon: '⚡' },
+    low: { label: 'Low Priority', variant: 'info', icon: '📌' }
   };
 
-  // 状态配置
+  // Status configuration
   const statusConfig = {
-    pending: { label: '待处理', variant: 'default', icon: '⏳' },
-    'in-progress': { label: '进行中', variant: 'info', icon: '🚀' },
-    completed: { label: '已完成', variant: 'success', icon: '✅' }
+    pending: { label: 'Pending', variant: 'default', icon: '⏳' },
+    'in-progress': { label: 'In Progress', variant: 'info', icon: '🚀' },
+    completed: { label: 'Completed', variant: 'success', icon: '✅' }
   };
 
   const priority = priorityConfig[task.priority];
@@ -138,18 +138,18 @@ function TaskDetailPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-fade-in">
-      {/* 返回按钮 */}
+      {/* Back Button */}
       <div>
         <Link to="/tasks">
           <Button variant="secondary" size="sm">
-            ← 返回列表
+            ← Back to List
           </Button>
         </Link>
       </div>
 
-      {/* 任务详情卡片 */}
+      {/* Task Detail Card */}
       <Card>
-        {/* 头部 */}
+        {/* Header */}
         <div className="flex items-start justify-between mb-6">
           <div className="flex-1">
             {editing ? (
@@ -159,7 +159,7 @@ function TaskDetailPage() {
                 value={formData.title}
                 onChange={handleInputChange}
                 className="input text-2xl font-bold mb-2"
-                placeholder="任务标题"
+                placeholder="Task Title"
               />
             ) : (
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -177,29 +177,29 @@ function TaskDetailPage() {
           </div>
         </div>
 
-        {/* 描述 */}
+        {/* Description */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">描述</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Description</h3>
           {editing ? (
             <textarea
               name="description"
               value={formData.description}
               onChange={handleInputChange}
               className="input min-h-[120px]"
-              placeholder="任务描述"
+              placeholder="Task Description"
             />
           ) : (
             <p className="text-gray-700 whitespace-pre-wrap">
-              {task.description || '暂无描述'}
+              {task.description || 'No description'}
             </p>
           )}
         </div>
 
-        {/* 详细信息 */}
+        {/* Detailed Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-          {/* 状态 */}
+          {/* Status */}
           <div>
-            <h4 className="text-sm font-medium text-gray-500 mb-2">状态</h4>
+            <h4 className="text-sm font-medium text-gray-500 mb-2">Status</h4>
             {editing ? (
               <select
                 name="status"
@@ -207,18 +207,18 @@ function TaskDetailPage() {
                 onChange={handleInputChange}
                 className="input"
               >
-                <option value="pending">待处理</option>
-                <option value="in-progress">进行中</option>
-                <option value="completed">已完成</option>
+                <option value="pending">Pending</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
               </select>
             ) : (
               <p className="text-gray-900">{status.label}</p>
             )}
           </div>
 
-          {/* 优先级 */}
+          {/* Priority */}
           <div>
-            <h4 className="text-sm font-medium text-gray-500 mb-2">优先级</h4>
+            <h4 className="text-sm font-medium text-gray-500 mb-2">Priority</h4>
             {editing ? (
               <select
                 name="priority"
@@ -226,18 +226,18 @@ function TaskDetailPage() {
                 onChange={handleInputChange}
                 className="input"
               >
-                <option value="high">高优先级</option>
-                <option value="medium">中优先级</option>
-                <option value="low">低优先级</option>
+                <option value="high">High Priority</option>
+                <option value="medium">Medium Priority</option>
+                <option value="low">Low Priority</option>
               </select>
             ) : (
               <p className="text-gray-900">{priority.label}</p>
             )}
           </div>
 
-          {/* 截止日期 */}
+          {/* Due Date */}
           <div>
-            <h4 className="text-sm font-medium text-gray-500 mb-2">截止日期</h4>
+            <h4 className="text-sm font-medium text-gray-500 mb-2">Due Date</h4>
             {editing ? (
               <input
                 type="date"
@@ -249,24 +249,24 @@ function TaskDetailPage() {
             ) : (
               <p className="text-gray-900">
                 {task.dueDate
-                  ? new Date(task.dueDate).toLocaleDateString('zh-CN')
-                  : '无截止日期'}
+                  ? new Date(task.dueDate).toLocaleDateString('en-US')
+                  : 'No due date'}
               </p>
             )}
           </div>
 
-          {/* 创建时间 */}
+          {/* Created Date */}
           <div>
-            <h4 className="text-sm font-medium text-gray-500 mb-2">创建时间</h4>
+            <h4 className="text-sm font-medium text-gray-500 mb-2">Created Date</h4>
             <p className="text-gray-900">
-              {new Date(task.createdAt).toLocaleString('zh-CN')}
+              {new Date(task.createdAt).toLocaleString('en-US')}
             </p>
           </div>
         </div>
 
-        {/* 标签 */}
+        {/* Tags */}
         <div className="mb-6">
-          <h4 className="text-sm font-medium text-gray-500 mb-2">标签</h4>
+          <h4 className="text-sm font-medium text-gray-500 mb-2">Tags</h4>
           <div className="flex flex-wrap gap-2">
             {task.tags && task.tags.length > 0 ? (
               task.tags.map((tag, index) => (
@@ -275,35 +275,35 @@ function TaskDetailPage() {
                 </Badge>
               ))
             ) : (
-              <p className="text-gray-400">暂无标签</p>
+              <p className="text-gray-400">No tags</p>
             )}
           </div>
         </div>
 
-        {/* 操作按钮 */}
+        {/* Action Buttons */}
         <div className="flex flex-wrap gap-3 pt-6 border-t border-gray-200">
           {editing ? (
             <>
               <Button variant="primary" onClick={handleSave}>
-                💾 保存
+                Save
               </Button>
               <Button variant="secondary" onClick={handleCancel}>
-                取消
+                Cancel
               </Button>
             </>
           ) : (
             <>
               <Button variant="primary" onClick={() => setEditing(true)}>
-                ✏️ 编辑
+                Edit
               </Button>
               <Button
                 variant={task.status === 'completed' ? 'secondary' : 'success'}
                 onClick={handleToggleStatus}
               >
-                {task.status === 'completed' ? '标记未完成' : '标记完成'}
+                {task.status === 'completed' ? 'Mark Incomplete' : 'Mark Complete'}
               </Button>
               <Button variant="danger" onClick={handleDelete}>
-                🗑️ 删除
+                Delete
               </Button>
             </>
           )}
@@ -314,4 +314,3 @@ function TaskDetailPage() {
 }
 
 export default TaskDetailPage;
-

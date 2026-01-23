@@ -1,6 +1,6 @@
 /**
  * @fault-type: build-out-of-memory (App.jsx with import)
- * @description: App.jsx 导入大数据文件，触发构建时内存溢出
+ * @description: App.jsx imports large data file, triggering memory overflow during build
  */
 
 import React from 'react';
@@ -17,8 +17,8 @@ import CreateTaskPage from './pages/CreateTaskPage';
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 
-// 🔴 故障注入：导入大数据文件
-// 这会在构建时加载并执行 largeData.js，导致内存溢出
+// ERROR: Fault injection - Import large data file
+// This will load and execute largeData.js during build, causing memory overflow
 import { 
   LARGE_CONSTANT_DATA, 
   HUGE_STRING, 
@@ -27,18 +27,18 @@ import {
   getTotalDataSize 
 } from './utils/largeData';
 
-// 🔴 在模块顶层使用这些数据，确保它们被加载
-console.log('📊 加载大数据文件...');
-console.log('数据大小:', getTotalDataSize());
-console.log('LARGE_CONSTANT_DATA 前10项:', LARGE_CONSTANT_DATA.slice(0, 10));
-console.log('HUGE_STRING 长度:', HUGE_STRING.length);
-console.log('MANY_OBJECTS 数量:', MANY_OBJECTS.length);
-console.log('MORE_DATA 数组数量:', MORE_DATA.arrays.length);
+// ERROR: Use this data at module top level to ensure it's loaded
+console.log('Loading large data file...');
+console.log('Data size:', getTotalDataSize());
+console.log('LARGE_CONSTANT_DATA first 10 items:', LARGE_CONSTANT_DATA.slice(0, 10));
+console.log('HUGE_STRING length:', HUGE_STRING.length);
+console.log('MANY_OBJECTS count:', MANY_OBJECTS.length);
+console.log('MORE_DATA arrays count:', MORE_DATA.arrays.length);
 
 function App() {
-  // 🔴 在组件中也引用这些数据
+  // ERROR: Also reference this data in component
   React.useEffect(() => {
-    console.log('App 组件加载，数据大小:', getTotalDataSize());
+    console.log('App component loaded, data size:', getTotalDataSize());
   }, []);
 
   return (
@@ -62,4 +62,3 @@ function App() {
 }
 
 export default App;
-

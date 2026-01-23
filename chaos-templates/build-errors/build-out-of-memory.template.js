@@ -1,50 +1,50 @@
 /**
  * @fault-type: build-out-of-memory
  * @category: build-errors
- * @description: 构建过程中内存不足
+ * @description: Out of memory during build process
  * @expected-error: JavaScript heap out of memory
  * @target-file: src/utils/largeData.js
  * @severity: high
  * 
- * ⚠️ 重要：此文件需要在 App.jsx 中导入才会触发内存溢出
+ * IMPORTANT: This file needs to be imported in App.jsx to trigger memory overflow
  */
 
-// 🚨 故障注入：构建内存溢出
-// 错误类型：生成超大数据导致内存不足
-// 预期结果：构建过程中内存溢出，进程崩溃
+// FAULT INJECTION: Build out of memory
+// Error Type: Generating huge data causes memory shortage
+// Expected Result: Memory overflow during build, process crashes
 
-console.log('⚠️ 开始生成大量数据，可能导致内存溢出...');
+console.log('WARNING: Starting to generate large data, may cause memory overflow...');
 
 /**
- * 生成超大数据集
- * 这会在模块加载时立即执行，消耗大量内存
+ * Generate huge dataset
+ * This executes immediately when module loads, consuming large amounts of memory
  */
 const generateLargeDataset = () => {
   const data = [];
   
-  // 🔴 错误：生成超大数组（5M个元素，每个元素包含大量数据）
-  console.log('生成 5,000,000 个复杂对象...');
+  // ERROR: Generate huge array (5M elements, each element contains lots of data)
+  console.log('Generating 5,000,000 complex objects...');
   for (let i = 0; i < 5000000; i++) {
     data.push({
       id: i,
       name: `Item ${i}`,
-      // 每个描述重复200次，约20KB
+      // Each description repeated 200 times, about 20KB
       description: `This is a very long description for item ${i} with lots of text content. `.repeat(200),
       metadata: {
         created: new Date().toISOString(),
-        // 1000个标签
+        // 1000 tags
         tags: Array(1000).fill(0).map((_, j) => `tag-${i}-${j}`),
-        // 1000个属性
+        // 1000 properties
         properties: Object.fromEntries(
           Array(1000).fill(0).map((_, j) => [`prop${j}`, `value-${i}-${j}`])
         ),
       },
-      // 深度嵌套的大量数据
+      // Deep nested large data
       nested: {
         level1: {
           level2: {
             level3: {
-              // 每个元素10000个字符串
+              // 10000 strings per element
               data: Array(10000).fill(0).map((_, j) => `nested-data-${i}-${j}`),
             },
           },
@@ -52,40 +52,40 @@ const generateLargeDataset = () => {
       },
     });
     
-    // 每10万次打印进度（用于调试）
+    // Print progress every 100k iterations (for debugging)
     if (i % 100000 === 0 && i > 0) {
-      console.log(`已生成 ${i} 个对象...`);
+      console.log(`Generated ${i} objects...`);
     }
   }
   
   return data;
 };
 
-// 🔴 错误：在模块加载时就生成数据（立即执行）
-console.log('开始生成 LARGE_CONSTANT_DATA...');
+// ERROR: Generate data at module load time (immediate execution)
+console.log('Starting to generate LARGE_CONSTANT_DATA...');
 export const LARGE_CONSTANT_DATA = generateLargeDataset();
-console.log('LARGE_CONSTANT_DATA 生成完成，大小:', LARGE_CONSTANT_DATA.length);
+console.log('LARGE_CONSTANT_DATA generation complete, size:', LARGE_CONSTANT_DATA.length);
 
-// 🔴 错误：生成超大字符串（约100MB）
-console.log('开始生成 HUGE_STRING...');
+// ERROR: Generate huge string (about 100MB)
+console.log('Starting to generate HUGE_STRING...');
 export const HUGE_STRING = 'x'.repeat(100000000);
-console.log('HUGE_STRING 生成完成，长度:', HUGE_STRING.length);
+console.log('HUGE_STRING generation complete, length:', HUGE_STRING.length);
 
-// 🔴 错误：创建大量对象（约2M个对象）
-console.log('开始生成 MANY_OBJECTS...');
+// ERROR: Create many objects (about 2M objects)
+console.log('Starting to generate MANY_OBJECTS...');
 export const MANY_OBJECTS = Array(2000000).fill(0).map((_, i) => ({
   id: i,
-  // 每个对象包含1000个元素的数组
+  // Each object contains array of 1000 elements
   data: Array(1000).fill(0).map((_, j) => `data-${i}-${j}`),
-  // 额外的大字符串
+  // Extra large string
   content: `Content for object ${i}`.repeat(1000),
 }));
-console.log('MANY_OBJECTS 生成完成，大小:', MANY_OBJECTS.length);
+console.log('MANY_OBJECTS generation complete, size:', MANY_OBJECTS.length);
 
-// 🔴 错误：创建更多的全局数据
-console.log('开始生成 MORE_DATA...');
+// ERROR: Create more global data
+console.log('Starting to generate MORE_DATA...');
 export const MORE_DATA = {
-  // 10个大数组
+  // 10 large arrays
   arrays: Array(10).fill(0).map((_, i) => 
     Array(1000000).fill(0).map((_, j) => ({
       index: j,
@@ -93,35 +93,35 @@ export const MORE_DATA = {
       timestamp: Date.now(),
     }))
   ),
-  // 大量字符串
+  // Many strings
   strings: Array(1000000).fill(0).map((_, i) => 
     `This is a long string number ${i}`.repeat(100)
   ),
 };
-console.log('MORE_DATA 生成完成');
+console.log('MORE_DATA generation complete');
 
 /**
- * 递归函数（虽然会栈溢出，但主要目的是内存溢出）
+ * Recursive function (will stack overflow, but main purpose is memory overflow)
  */
 export function recursiveFunction(n = 100000) {
   if (n <= 0) return [];
-  // 每次递归都创建大数组
+  // Create large array each recursion
   const data = Array(1000).fill(`data-${n}`);
   return [data, ...recursiveFunction(n - 1)];
 }
 
-// 🔴 错误：在模块加载时执行递归
-console.log('开始执行递归函数...');
+// ERROR: Execute recursive function at module load
+console.log('Starting recursive function execution...');
 try {
   export const RECURSIVE_RESULT = recursiveFunction(10000);
-  console.log('递归完成');
+  console.log('Recursion complete');
 } catch (e) {
-  console.error('递归失败:', e.message);
+  console.error('Recursion failed:', e.message);
 }
 
-console.log('✅ 所有数据生成完成（如果能看到这条消息说明内存足够）');
+console.log('All data generation complete (if you see this message, memory is sufficient)');
 
-// 导出一个函数供外部调用
+// Export a function for external use
 export const getTotalDataSize = () => {
   return {
     largeData: LARGE_CONSTANT_DATA.length,
@@ -130,4 +130,3 @@ export const getTotalDataSize = () => {
     moreData: MORE_DATA.arrays.length,
   };
 };
-

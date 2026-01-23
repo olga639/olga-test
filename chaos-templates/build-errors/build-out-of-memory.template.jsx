@@ -1,24 +1,24 @@
 /**
  * @fault-type: build-out-of-memory
  * @category: build-errors
- * @description: 构建过程中内存不足
+ * @description: Out of memory during build process
  * @expected-error: JavaScript heap out of memory
  * @target-file: src/utils/largeData.js
  * @severity: high
  */
 
-// 🚨 故障注入：构建内存溢出
-// 错误类型：生成超大数据导致内存不足
-// 预期结果：构建过程中内存溢出
+// FAULT INJECTION: Build out of memory
+// Error Type: Generating huge data causes memory shortage
+// Expected Result: Memory overflow during build
 
 /**
- * 生成超大数据集
- * 这会在构建时消耗大量内存
+ * Generate huge dataset
+ * This consumes large amounts of memory during build
  */
 export const generateLargeDataset = () => {
   const data = [];
   
-  // 🔴 错误：生成超大数组（10M个元素）
+  // ERROR: Generate huge array (10M elements)
   for (let i = 0; i < 10000000; i++) {
     data.push({
       id: i,
@@ -31,7 +31,7 @@ export const generateLargeDataset = () => {
           Array(1000).fill(0).map((_, j) => [`prop${j}`, `value${j}`])
         ),
       },
-      // 嵌套大量数据
+      // Nest large amounts of data
       nested: {
         level1: {
           level2: {
@@ -47,26 +47,25 @@ export const generateLargeDataset = () => {
   return data;
 };
 
-// 🔴 错误：在模块加载时就生成数据
+// ERROR: Generate data at module load time
 export const LARGE_CONSTANT_DATA = generateLargeDataset();
 
-// 🔴 错误：生成超大字符串
+// ERROR: Generate huge string
 export const HUGE_STRING = 'x'.repeat(100000000);
 
-// 🔴 错误：创建大量对象
+// ERROR: Create many objects
 export const MANY_OBJECTS = Array(1000000).fill(0).map((_, i) => ({
   id: i,
   data: Array(1000).fill(`data-${i}`),
 }));
 
 /**
- * 递归函数导致栈溢出
+ * Recursive function causes stack overflow
  */
 export function recursiveFunction(n = 1000000) {
   if (n <= 0) return 0;
   return n + recursiveFunction(n - 1);
 }
 
-// 🔴 错误：在模块加载时执行递归
+// ERROR: Execute recursive function at module load
 export const RECURSIVE_RESULT = recursiveFunction();
-

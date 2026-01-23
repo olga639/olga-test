@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * 快速测试剩余的故障类型
+ * Quick test for remaining fault types
  */
 
 import { spawn } from 'child_process';
@@ -11,7 +11,7 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// 剩余要测试的故障类型
+// Remaining fault types to test
 const faultTypes = [
   'dependency-version-conflict',
   'env-variable-missing',
@@ -43,24 +43,24 @@ async function runCommand(command, args) {
 
 async function testFault(faultType) {
   console.log(`\n${'='.repeat(60)}`);
-  console.log(`📝 测试: ${faultType}`);
+  console.log(`📝 Testing: ${faultType}`);
   console.log('='.repeat(60));
   
   try {
-    // 注入故障
-    console.log('⏳ 注入故障...');
+    // Inject fault
+    console.log('⏳ Injecting fault...');
     await runCommand('node', ['scripts/chaos-cli.js', 'inject', '--type', faultType]);
-    console.log('✅ 注入成功\n');
+    console.log('✅ Injection successful\n');
     
     return { type: faultType, success: true };
   } catch (error) {
-    console.log(`❌ 注入失败: ${error.message}\n`);
+    console.log(`❌ Injection failed: ${error.message}\n`);
     return { type: faultType, success: false, error: error.message };
   }
 }
 
 async function main() {
-  console.log('\n🧪 快速测试剩余故障类型\n');
+  console.log('\n🧪 Quick test for remaining fault types\n');
   
   const results = [];
   
@@ -68,25 +68,25 @@ async function main() {
     const result = await testFault(faultType);
     results.push(result);
     
-    // 如果成功，等待1秒后继续
+    // If successful, wait 1 second before continuing
     if (result.success) {
       await new Promise(resolve => setTimeout(resolve, 1000));
     }
   }
   
-  // 汇总结果
+  // Summarize results
   console.log('\n' + '='.repeat(60));
-  console.log('📊 测试汇总');
+  console.log('📊 Test Summary');
   console.log('='.repeat(60));
   
   const successful = results.filter(r => r.success);
   const failed = results.filter(r => !r.success);
   
-  console.log(`\n✅ 成功: ${successful.length}/${results.length}`);
+  console.log(`\n✅ Success: ${successful.length}/${results.length}`);
   successful.forEach(r => console.log(`   - ${r.type}`));
   
   if (failed.length > 0) {
-    console.log(`\n❌ 失败: ${failed.length}/${results.length}`);
+    console.log(`\n❌ Failed: ${failed.length}/${results.length}`);
     failed.forEach(r => console.log(`   - ${r.type}: ${r.error}`));
   }
   

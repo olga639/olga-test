@@ -1,9 +1,9 @@
 /**
  * @fault-type: image-404
  * @category: resource-errors
- * @description: 图片资源404（简化模板）
+ * @description: Image resource 404 (simplified template)
  * @expected-error: 404 Not Found
  * @severity: low
  */
-// 简化模板 - 实际使用时会在Header.jsx中添加错误的图片路径
+// Simplified template - in actual use, will add incorrect image path in Header.jsx
 

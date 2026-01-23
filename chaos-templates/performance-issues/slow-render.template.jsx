@@ -1,9 +1,9 @@
 /**
  * @fault-type: slow-render
  * @category: performance-issues
- * @description: 渲染卡顿（简化模板）
+ * @description: Render lag (simplified template)
  * @expected-error: Performance warning
  * @severity: low
  */
-// 简化模板 - 实际使用时会添加大量数据渲染
+// Simplified template - in actual use, will add large data rendering
 

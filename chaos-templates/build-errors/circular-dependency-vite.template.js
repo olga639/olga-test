@@ -1,7 +1,7 @@
 /**
  * @fault-type: circular-dependency
  * @category: build-errors
- * @description: 将循环依赖告警提升为错误，确保构建失败
+ * @description: Promote circular dependency warning to error to ensure build failure
  * @expected-error: Circular dependency detected
  * @target-file: vite.config.js
  * @severity: medium

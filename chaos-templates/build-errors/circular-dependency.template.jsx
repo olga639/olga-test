@@ -1,24 +1,24 @@
 /**
  * @fault-type: circular-dependency
  * @category: build-errors
- * @description: 模块间存在循环依赖
+ * @description: Circular dependency between modules
  * @expected-error: Circular dependency
  * @target-file: src/utils/helpers.js
  * @severity: medium
  */
 
-// 🚨 故障注入：循环依赖
-// 错误类型：helpers.js → validators.js → helpers.js
-// 预期结果：构建失败或运行时错误
+// FAULT INJECTION: Circular dependency
+// Error Type: helpers.js -> validators.js -> helpers.js
+// Expected Result: Build failure or runtime error
 
-// 🔴 错误：从validators导入，而validators又导入helpers
+// ERROR: Import from validators, which also imports helpers
 import { validateTaskData } from './validators';
 
 /**
- * 格式化任务数据
+ * Format task data
  */
 export function formatTaskData(task) {
-  // 使用validators中的函数，造成循环依赖
+  // Use function from validators, causing circular dependency
   if (!validateTaskData(task)) {
     throw new Error('Invalid task data');
   }
@@ -31,33 +31,32 @@ export function formatTaskData(task) {
 }
 
 /**
- * 格式化日期
+ * Format date
  */
 export function formatDate(date) {
-  return new Date(date).toLocaleDateString('zh-CN');
+  return new Date(date).toLocaleDateString('en-US');
 }
 
 /**
- * 获取状态显示文本
+ * Get status display text
  */
 export function getStatusDisplay(status) {
   const statusMap = {
-    pending: '待处理',
-    'in-progress': '进行中',
-    completed: '已完成',
+    pending: 'Pending',
+    'in-progress': 'In Progress',
+    completed: 'Completed',
   };
   return statusMap[status] || status;
 }
 
 /**
- * 获取优先级显示文本
+ * Get priority display text
  */
 export function getPriorityDisplay(priority) {
   const priorityMap = {
-    low: '低',
-    medium: '中',
-    high: '高',
+    low: 'Low',
+    medium: 'Medium',
+    high: 'High',
   };
   return priorityMap[priority] || priority;
 }
-

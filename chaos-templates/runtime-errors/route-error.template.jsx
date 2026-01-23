@@ -1,9 +1,8 @@
 /**
  * @fault-type: route-error  
  * @category: runtime-errors
- * @description: 路由配置错误（简化模板）
+ * @description: Route configuration error (simplified template)
  * @expected-error: No routes matched
  * @severity: medium
  */
-// 简化模板 - 实际使用时会修改App.jsx的路由配置
-
+// Simplified template - actual use will modify route configuration in App.jsx

@@ -1,22 +1,22 @@
 /**
  * @fault-type: state-error
  * @category: runtime-errors
- * @description: 在渲染过程中更新状态导致错误
+ * @description: Updating state during render causes error
  * @expected-error: Cannot update during render
  * @target-file: src/context/TaskContext.jsx
  * @severity: medium
  * 
- * 🚨 简化模板：在getTaskStats中直接调用setState
+ * Simplified template: calling setState directly in getTaskStats
  */
 
-// 此模板故意简化，实际使用时会在TaskContext中注入错误
-// 错误示例：在计算属性或渲染函数中调用setState
+// This template is intentionally simplified, actual use will inject error in TaskContext
+// Error example: calling setState in computed property or render function
 
 export const stateErrorExample = `
-// 🚨 错误示例：在计算函数中更新状态
+// ERROR Example: Updating state in computed function
 const getTaskStats = useCallback(() => {
-  // ❌ 错误：在非事件处理函数中直接更新状态
-  setError('计算统计时出错');  // 这会导致 "Cannot update during render"
+  // ERROR: Directly updating state in non-event handler
+  setError('Error during stats calculation');  // This causes "Cannot update during render"
   
   return {
     total: tasks.length,
@@ -24,4 +24,3 @@ const getTaskStats = useCallback(() => {
   };
 }, [tasks]);
 `;
-

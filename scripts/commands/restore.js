@@ -1,11 +1,11 @@
 /**
- * Restore Command - 恢复命令
+ * Restore Command - Restore Command
  * 
- * 功能：
- * - 检查备份是否存在
- * - 恢复备份文件
- * - 清理备份目录
- * - 输出操作结果
+ * Features:
+ * - Check if backup exists
+ * - Restore backup files
+ * - Clean backup directory
+ * - Output operation results
  */
 
 import { hasBackup, getBackupInfo, restoreBackup, cleanBackup } from '../core/backupManager.js';
@@ -14,86 +14,86 @@ import logger from '../core/logger.js';
 export default async function restore(args) {
   try {
     logger.newLine();
-    logger.title('🔄 恢复正常状态');
+    logger.title('Restore to Normal State');
     logger.newLine();
 
-    // 检查备份是否存在
+    // Check if backup exists
     if (!hasBackup()) {
-      logger.warn('未找到备份文件');
-      logger.tip('请先使用 "npm run chaos inject" 注入故障');
+      logger.warn('No backup files found');
+      logger.tip('Please use "npm run chaos inject" to inject a fault first');
       logger.newLine();
       process.exit(0);
     }
 
-    // 获取备份信息
+    // Get backup information
     const backupInfo = getBackupInfo();
     
-    logger.info(`备份时间: ${new Date(backupInfo.timestamp).toLocaleString('zh-CN')}`);
-    logger.info(`故障类型: ${backupInfo.faultType}`);
-    logger.info(`备份文件: ${backupInfo.files.length} 个`);
+    logger.info(`Backup Time: ${new Date(backupInfo.timestamp).toLocaleString('en-US')}`);
+    logger.info(`Fault Type: ${backupInfo.faultType}`);
+    logger.info(`Backup Files: ${backupInfo.files.length}`);
     logger.newLine();
 
-    // 询问确认
-    logger.warn('此操作将覆盖当前的修改，确定要继续吗？');
-    logger.tip('如果您已经手动修改了代码，建议先提交或备份');
+    // Ask for confirmation
+    logger.warn('This operation will overwrite current changes, are you sure you want to continue?');
+    logger.tip('If you have manually modified the code, it is recommended to commit or backup first');
     logger.newLine();
 
-    const confirmed = await logger.confirm('确定要恢复备份吗？');
+    const confirmed = await logger.confirm('Are you sure you want to restore the backup?');
     
     if (!confirmed) {
-      logger.info('操作已取消');
+      logger.info('Operation cancelled');
       logger.newLine();
       process.exit(0);
     }
 
     logger.newLine();
 
-    // 步骤1: 恢复文件
-    logger.step('步骤 1/2: 恢复备份文件...');
+    // Step 1: Restore files
+    logger.step('Step 1/2: Restoring backup files...');
     const result = await restoreBackup();
     
     result.files.forEach(file => {
-      logger.success(`已恢复: ${file}`);
+      logger.success(`Restored: ${file}`);
     });
 
     if (result.removedFiles && result.removedFiles.length > 0) {
       result.removedFiles.forEach(file => {
-        logger.success(`已删除: ${file}`);
+        logger.success(`Deleted: ${file}`);
       });
     }
     logger.newLine();
 
-    // 步骤2: 清理备份
-    logger.step('步骤 2/2: 清理备份目录...');
+    // Step 2: Clean backup
+    logger.step('Step 2/2: Cleaning backup directory...');
     await cleanBackup();
-    logger.success('备份已清理');
+    logger.success('Backup cleaned');
     logger.newLine();
 
     logger.divider();
     logger.newLine();
 
-    // 显示成功消息
-    logger.box(`✅ 已恢复正常状态！\n\n恢复文件: ${result.files.length} 个\n故障类型: ${result.faultType}`, 'success');
+    // Display success message
+    logger.box(`Restored to normal state!\n\nRestored Files: ${result.files.length}\nFault Type: ${result.faultType}`, 'success');
     logger.newLine();
 
-    // 显示下一步操作
-    logger.title('💡 下一步操作');
+    // Display next steps
+    logger.title('Next Steps');
     logger.newLine();
     
-    logger.log('1️⃣  查看恢复的变更:');
+    logger.log('1. View restored changes:');
     logger.code(`   git diff`);
     logger.newLine();
     
-    logger.log('2️⃣  提交修复:');
+    logger.log('2. Commit fix:');
     logger.code(`   git add .`);
-    logger.code(`   git commit -m "fix: 修复故障，恢复正常"`);
+    logger.code(`   git commit -m "fix: Fixed fault, restored to normal"`);
     logger.newLine();
     
-    logger.log('3️⃣  推送到远程仓库:');
+    logger.log('3. Push to remote repository:');
     logger.code(`   git push origin main`);
     logger.newLine();
     
-    logger.log('4️⃣  验证 Vercel 部署成功');
+    logger.log('4. Verify Vercel deployment success');
     logger.newLine();
 
     logger.divider();
@@ -101,7 +101,7 @@ export default async function restore(args) {
 
   } catch (error) {
     logger.newLine();
-    logger.error(`恢复失败: ${error.message}`);
+    logger.error(`Restore failed: ${error.message}`);
     logger.newLine();
     
     if (process.env.DEBUG) {
@@ -111,4 +111,3 @@ export default async function restore(args) {
     process.exit(1);
   }
 }
-

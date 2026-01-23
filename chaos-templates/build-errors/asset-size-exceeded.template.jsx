@@ -1,27 +1,27 @@
 /**
  * @fault-type: asset-size-exceeded
  * @category: build-errors
- * @description: 打包后的文件超过限制
+ * @description: Bundled file exceeds size limit
  * @expected-error: Asset exceeds recommended size limit
  * @target-file: src/utils/heavyAssets.js
  * @severity: medium
  */
 
-// 🚨 故障注入：资源文件过大
-// 错误类型：单个文件打包后超过大小限制
-// 预期结果：Vite警告或构建失败
+// FAULT INJECTION: Asset size exceeded
+// Error Type: Single file bundle exceeds size limit
+// Expected Result: Vite warning or build failure
 
 /**
- * 超大的静态数据
- * 这会导致打包后的bundle过大
+ * Oversized static data
+ * This causes the bundled file to be too large
  */
 
-// 🔴 错误：包含超大的Base64图片数据
+// ERROR: Contains oversized Base64 image data
 export const LARGE_IMAGE_DATA = `data:image/png;base64,${'A'.repeat(5000000)}`;
 
-// 🔴 错误：包含大量的静态配置数据
+// ERROR: Contains large amounts of static configuration data
 export const MASSIVE_CONFIG = {
-  // 生成10000个配置项
+  // Generate 10000 config items
   ...Object.fromEntries(
     Array(10000).fill(0).map((_, i) => [
       `config_${i}`,
@@ -42,7 +42,7 @@ export const MASSIVE_CONFIG = {
   ),
 };
 
-// 🔴 错误：包含大量的翻译数据
+// ERROR: Contains large amounts of translation data
 export const TRANSLATIONS = {
   en: Object.fromEntries(
     Array(10000).fill(0).map((_, i) => [
@@ -53,18 +53,18 @@ export const TRANSLATIONS = {
   zh: Object.fromEntries(
     Array(10000).fill(0).map((_, i) => [
       `key_${i}`,
-      `这是第${i}个翻译，包含非常长的文本`.repeat(20),
+      `This is translation ${i} in Chinese with very long text`.repeat(20),
     ])
   ),
   ja: Object.fromEntries(
     Array(10000).fill(0).map((_, i) => [
       `key_${i}`,
-      `これは翻訳${i}で、非常に長いテキストが含まれています`.repeat(20),
+      `This is translation ${i} in Japanese with very long text`.repeat(20),
     ])
   ),
 };
 
-// 🔴 错误：包含大量的模拟数据
+// ERROR: Contains large amounts of mock data
 export const MOCK_DATA = Array(50000).fill(0).map((_, i) => ({
   id: i,
   title: `Item ${i}`,
@@ -93,7 +93,6 @@ export const MOCK_DATA = Array(50000).fill(0).map((_, i) => ({
   },
 }));
 
-// 🔴 错误：导入大量第三方库（如果未使用tree-shaking）
-// 这会增加bundle大小
-export { default as _ } from 'lodash'; // 整个lodash库
-
+// ERROR: Import entire third-party library (if tree-shaking not used)
+// This increases bundle size
+export { default as _ } from 'lodash'; // Entire lodash library

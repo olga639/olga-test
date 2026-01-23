@@ -2,21 +2,21 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { mockApi } from '../utils/mockApi';
 
 /**
- * TaskContext - 任务状态管理上下文
+ * TaskContext - Task State Management Context
  * 
- * 提供全局的任务状态管理，包括：
- * - 任务列表
- * - CRUD操作
- * - 加载状态
- * - 错误处理
+ * Provides global task state management, including:
+ * - Task list
+ * - CRUD operations
+ * - Loading state
+ * - Error handling
  */
 const TaskContext = createContext(null);
 
 /**
- * useTaskContext - 使用任务上下文的Hook
+ * useTaskContext - Hook to use task context
  * 
- * @returns {Object} 任务上下文对象
- * @throws {Error} 如果在TaskProvider外部使用会抛出错误
+ * @returns {Object} Task context object
+ * @throws {Error} Throws error if used outside TaskProvider
  */
 export function useTaskContext() {
   const context = useContext(TaskContext);
@@ -27,20 +27,20 @@ export function useTaskContext() {
 }
 
 /**
- * TaskProvider - 任务状态提供者组件
+ * TaskProvider - Task State Provider Component
  * 
  * @param {Object} props
- * @param {React.ReactNode} props.children - 子组件
+ * @param {React.ReactNode} props.children - Child components
  */
 export function TaskProvider({ children }) {
-  // 状态管理
+  // State management
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [initialized, setInitialized] = useState(false);
 
   /**
-   * 获取所有任务
+   * Fetch all tasks
    */
   const fetchTasks = useCallback(async () => {
     try {
@@ -50,18 +50,18 @@ export function TaskProvider({ children }) {
       setTasks(data);
       setInitialized(true);
     } catch (err) {
-      setError(err.message || '获取任务失败');
-      console.error('获取任务失败:', err);
+      setError(err.message || 'Failed to fetch tasks');
+      console.error('Failed to fetch tasks:', err);
     } finally {
       setLoading(false);
     }
   }, []);
 
   /**
-   * 根据ID获取单个任务
+   * Get single task by ID
    * 
-   * @param {string} id - 任务ID
-   * @returns {Promise<Object>} 任务对象
+   * @param {string} id - Task ID
+   * @returns {Promise<Object>} Task object
    */
   const getTaskById = useCallback(async (id) => {
     try {
@@ -70,8 +70,8 @@ export function TaskProvider({ children }) {
       const task = await mockApi.getTaskById(id);
       return task;
     } catch (err) {
-      setError(err.message || '获取任务详情失败');
-      console.error('获取任务详情失败:', err);
+      setError(err.message || 'Failed to get task details');
+      console.error('Failed to get task details:', err);
       throw err;
     } finally {
       setLoading(false);
@@ -79,10 +79,10 @@ export function TaskProvider({ children }) {
   }, []);
 
   /**
-   * 创建新任务
+   * Create new task
    * 
-   * @param {Object} taskData - 任务数据
-   * @returns {Promise<Object>} 创建的任务对象
+   * @param {Object} taskData - Task data
+   * @returns {Promise<Object>} Created task object
    */
   const createTask = useCallback(async (taskData) => {
     try {
@@ -92,8 +92,8 @@ export function TaskProvider({ children }) {
       setTasks(prevTasks => [newTask, ...prevTasks]);
       return newTask;
     } catch (err) {
-      setError(err.message || '创建任务失败');
-      console.error('创建任务失败:', err);
+      setError(err.message || 'Failed to create task');
+      console.error('Failed to create task:', err);
       throw err;
     } finally {
       setLoading(false);
@@ -101,11 +101,11 @@ export function TaskProvider({ children }) {
   }, []);
 
   /**
-   * 更新任务
+   * Update task
    * 
-   * @param {string} id - 任务ID
-   * @param {Object} updates - 更新的数据
-   * @returns {Promise<Object>} 更新后的任务对象
+   * @param {string} id - Task ID
+   * @param {Object} updates - Update data
+   * @returns {Promise<Object>} Updated task object
    */
   const updateTask = useCallback(async (id, updates) => {
     try {
@@ -117,8 +117,8 @@ export function TaskProvider({ children }) {
       );
       return updatedTask;
     } catch (err) {
-      setError(err.message || '更新任务失败');
-      console.error('更新任务失败:', err);
+      setError(err.message || 'Failed to update task');
+      console.error('Failed to update task:', err);
       throw err;
     } finally {
       setLoading(false);
@@ -126,9 +126,9 @@ export function TaskProvider({ children }) {
   }, []);
 
   /**
-   * 删除任务
+   * Delete task
    * 
-   * @param {string} id - 任务ID
+   * @param {string} id - Task ID
    * @returns {Promise<void>}
    */
   const deleteTask = useCallback(async (id) => {
@@ -138,8 +138,8 @@ export function TaskProvider({ children }) {
       await mockApi.deleteTask(id);
       setTasks(prevTasks => prevTasks.filter(task => task.id !== id));
     } catch (err) {
-      setError(err.message || '删除任务失败');
-      console.error('删除任务失败:', err);
+      setError(err.message || 'Failed to delete task');
+      console.error('Failed to delete task:', err);
       throw err;
     } finally {
       setLoading(false);
@@ -147,45 +147,45 @@ export function TaskProvider({ children }) {
   }, []);
 
   /**
-   * 切换任务完成状态
+   * Toggle task completion status
    * 
-   * @param {string} id - 任务ID
-   * @returns {Promise<Object>} 更新后的任务对象
+   * @param {string} id - Task ID
+   * @returns {Promise<Object>} Updated task object
    */
   const toggleTaskStatus = useCallback(async (id) => {
     const task = tasks.find(t => t.id === id);
     if (!task) {
-      throw new Error('任务不存在');
+      throw new Error('Task not found');
     }
     const newStatus = task.status === 'completed' ? 'pending' : 'completed';
     return updateTask(id, { status: newStatus });
   }, [tasks, updateTask]);
 
   /**
-   * 按状态筛选任务
+   * Filter tasks by status
    * 
-   * @param {string} status - 任务状态
-   * @returns {Array} 筛选后的任务列表
+   * @param {string} status - Task status
+   * @returns {Array} Filtered task list
    */
   const getTasksByStatus = useCallback((status) => {
     return tasks.filter(task => task.status === status);
   }, [tasks]);
 
   /**
-   * 按优先级筛选任务
+   * Filter tasks by priority
    * 
-   * @param {string} priority - 任务优先级
-   * @returns {Array} 筛选后的任务列表
+   * @param {string} priority - Task priority
+   * @returns {Array} Filtered task list
    */
   const getTasksByPriority = useCallback((priority) => {
     return tasks.filter(task => task.priority === priority);
   }, [tasks]);
 
   /**
-   * 搜索任务
+   * Search tasks
    * 
-   * @param {string} query - 搜索关键词
-   * @returns {Array} 搜索结果
+   * @param {string} query - Search keyword
+   * @returns {Array} Search results
    */
   const searchTasks = useCallback((query) => {
     if (!query.trim()) {
@@ -200,9 +200,9 @@ export function TaskProvider({ children }) {
   }, [tasks]);
 
   /**
-   * 获取任务统计信息
+   * Get task statistics
    * 
-   * @returns {Object} 统计信息
+   * @returns {Object} Statistics information
    */
   const getTaskStats = useCallback(() => {
     return {
@@ -216,22 +216,22 @@ export function TaskProvider({ children }) {
     };
   }, [tasks]);
 
-  // 初始化时加载任务
+  // Load tasks on initialization
   useEffect(() => {
     if (!initialized) {
       fetchTasks();
     }
   }, [initialized, fetchTasks]);
 
-  // 上下文值
+  // Context value
   const contextValue = {
-    // 状态
+    // State
     tasks,
     loading,
     error,
     initialized,
 
-    // 操作方法
+    // Operation methods
     fetchTasks,
     getTaskById,
     createTask,
@@ -239,7 +239,7 @@ export function TaskProvider({ children }) {
     deleteTask,
     toggleTaskStatus,
 
-    // 查询方法
+    // Query methods
     getTasksByStatus,
     getTasksByPriority,
     searchTasks,
@@ -252,4 +252,3 @@ export function TaskProvider({ children }) {
     </TaskContext.Provider>
   );
 }
-

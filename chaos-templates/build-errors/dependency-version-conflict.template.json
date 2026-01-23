@@ -25,10 +25,10 @@
   "__chaos_fault__": {
     "type": "dependency-version-conflict",
     "category": "build-errors",
-    "description": "依赖版本冲突 - react@18.3.1 与 react-dom@17.0.2 版本不匹配",
+    "description": "Dependency version conflict - react@18.3.1 and react-dom@17.0.2 version mismatch",
     "expected-error": "ERESOLVE unable to resolve dependency tree - react-dom@17.0.2 requires react@^17.0.2 but react@18.3.1 is installed",
     "target-file": "package.json",
     "severity": "high",
-    "note": "React 和 React-DOM 的主版本必须匹配，否则会导致严重的运行时错误或安装失败"
+    "note": "React and React-DOM major versions must match, otherwise it will cause serious runtime errors or installation failure"
   }
 }

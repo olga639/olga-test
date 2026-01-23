@@ -1,14 +1,14 @@
 /**
- * Fault Registry - 故障类型注册表
+ * Fault Registry - Fault Type Registry
  * 
- * 定义所有支持的故障类型及其配置信息
+ * Defines all supported fault types and their configuration information
  * 
- * ⚠️ 重要：本注册表只包含会导致启动失败的错误类型
- * 即：构建阶段失败，无法成功部署的错误
+ * IMPORTANT: This registry only contains error types that cause startup failures
+ * i.e.: Build phase failures, errors that prevent successful deployment
  */
 
 export const faultRegistry = {
-  // ==================== 构建错误 - 语法和编译错误 ====================
+  // ==================== Build Errors - Syntax and Compilation Errors ====================
   
   'syntax-error': {
     name: 'JSX Syntax Error',
@@ -23,9 +23,9 @@ export const faultRegistry = {
   },
 
   'import-error': {
-    name: '导入路径错误',
+    name: 'Import Path Error',
     category: 'build-errors',
-    description: '错误的import路径，导致模块无法找到，编译失败',
+    description: 'Wrong import path causes module not found, compilation fails',
     targetFiles: ['src/App.jsx'],
     templateFile: 'chaos-templates/build-errors/import-error.template.jsx',
     expectedError: 'Cannot find module',
@@ -35,9 +35,9 @@ export const faultRegistry = {
   },
 
   'typescript-error': {
-    name: 'TypeScript类型错误',
+    name: 'TypeScript Type Error',
     category: 'build-errors',
-    description: '类型定义错误导致TypeScript编译失败（如果使用TS）',
+    description: 'Type definition error causes TypeScript compilation failure (if using TS)',
     targetFiles: ['src/App.jsx'],
     templateFile: 'chaos-templates/build-errors/typescript-error.template.jsx',
     expectedError: 'Type error',
@@ -47,9 +47,9 @@ export const faultRegistry = {
   },
 
   'undefined-variable': {
-    name: '未定义变量',
+    name: 'Undefined Variable',
     category: 'build-errors',
-    description: '使用未定义的变量或函数，导致编译失败',
+    description: 'Using undefined variable or function causes compilation failure',
     targetFiles: ['src/pages/TaskListPage.jsx'],
     templateFile: 'chaos-templates/build-errors/undefined-variable.template.jsx',
     expectedError: 'is not defined',
@@ -58,12 +58,12 @@ export const faultRegistry = {
     deployFails: true
   },
 
-  // ==================== 构建错误 - 依赖和配置错误 ====================
+  // ==================== Build Errors - Dependency and Configuration Errors ====================
 
   'dependency-missing': {
-    name: '依赖包缺失',
+    name: 'Missing Dependency',
     category: 'build-errors',
-    description: 'package.json中缺少必要的依赖包，npm install失败',
+    description: 'Missing required dependency in package.json, npm install fails',
     targetFiles: ['package.json'],
     templateFile: 'chaos-templates/build-errors/dependency-missing.template.json',
     expectedError: 'Cannot find package',
@@ -73,9 +73,9 @@ export const faultRegistry = {
   },
 
   'dependency-version-conflict': {
-    name: '依赖版本冲突',
+    name: 'Dependency Version Conflict',
     category: 'build-errors',
-    description: '依赖包版本不兼容，导致安装或编译失败',
+    description: 'Incompatible dependency versions cause installation or compilation failure',
     targetFiles: ['package.json'],
     templateFile: 'chaos-templates/build-errors/dependency-version-conflict.template.json',
     expectedError: 'ERESOLVE unable to resolve dependency tree',
@@ -85,9 +85,9 @@ export const faultRegistry = {
   },
 
   'env-variable-missing': {
-    name: '环境变量缺失',
+    name: 'Missing Environment Variable',
     category: 'build-errors',
-    description: '构建时必需的环境变量缺失，导致构建失败',
+    description: 'Required environment variable missing during build, causes build failure',
     targetFiles: ['vite.config.js'],
     templateFile: 'chaos-templates/build-errors/env-variable-missing.template.js',
     expectedError: 'Environment variable is not defined',
@@ -97,9 +97,9 @@ export const faultRegistry = {
   },
 
   'vite-config-error': {
-    name: 'Vite配置错误',
+    name: 'Vite Config Error',
     category: 'build-errors',
-    description: 'vite.config.js配置错误，导致构建工具无法启动',
+    description: 'vite.config.js configuration error, build tool cannot start',
     targetFiles: ['vite.config.js'],
     templateFile: 'chaos-templates/build-errors/vite-config-error.template.js',
     expectedError: 'Invalid configuration',
@@ -108,12 +108,12 @@ export const faultRegistry = {
     deployFails: true
   },
 
-  // ==================== 构建错误 - 资源和打包错误 ====================
+  // ==================== Build Errors - Resource and Bundling Errors ====================
 
   'css-syntax-error': {
-    name: 'CSS语法错误',
+    name: 'CSS Syntax Error',
     category: 'build-errors',
-    description: 'CSS或TailwindCSS配置错误，导致样式编译失败',
+    description: 'CSS or TailwindCSS configuration error causes style compilation failure',
     targetFiles: ['src/styles/index.css'],
     templateFile: 'chaos-templates/build-errors/css-syntax-error.template.css',
     expectedError: 'CssSyntaxError',
@@ -123,9 +123,9 @@ export const faultRegistry = {
   },
 
   'circular-dependency': {
-    name: '循环依赖',
+    name: 'Circular Dependency',
     category: 'build-errors',
-    description: '模块间存在循环依赖，导致构建失败或无限循环',
+    description: 'Circular dependency between modules causes build failure or infinite loop',
     targetFiles: ['src/utils/helpers.js', 'src/utils/validators.js', 'src/App.jsx', 'vite.config.js'],
     templateFile: 'chaos-templates/build-errors/circular-dependency.template.jsx',
     additionalTemplates: {
@@ -140,9 +140,9 @@ export const faultRegistry = {
   },
 
   'build-out-of-memory': {
-    name: '构建内存溢出',
+    name: 'Build Out of Memory',
     category: 'build-errors',
-    description: '构建过程中内存不足，导致构建失败',
+    description: 'Insufficient memory during build process causes build failure',
     targetFiles: ['src/utils/largeData.js', 'src/App.jsx'],
     templateFile: 'chaos-templates/build-errors/build-out-of-memory.template.js',
     additionalTemplates: {
@@ -152,13 +152,13 @@ export const faultRegistry = {
     severity: 'high',
     buildFails: true,
     deployFails: true,
-    note: '⚠️ 此故障需要创建大数据文件并在 App.jsx 中导入'
+    note: 'WARNING: This fault requires creating large data file and importing in App.jsx'
   },
 
   'asset-size-exceeded': {
-    name: '资源文件过大',
+    name: 'Asset Size Exceeded',
     category: 'build-errors',
-    description: '打包后的文件超过限制，导致部署失败',
+    description: 'Bundled file exceeds size limit, causes deployment failure',
     targetFiles: ['src/pages/Home.jsx'],
     templateFile: 'chaos-templates/build-errors/asset-size-exceeded.template.jsx',
     expectedError: 'Asset exceeds size limit',
@@ -169,21 +169,21 @@ export const faultRegistry = {
 };
 
 /**
- * 获取所有故障类型
+ * Get all fault types
  */
 export function getAllFaults() {
   return Object.keys(faultRegistry);
 }
 
 /**
- * 根据类型获取故障配置
+ * Get fault config by type
  */
 export function getFaultConfig(type) {
   return faultRegistry[type];
 }
 
 /**
- * 按分类获取故障列表
+ * Get faults by category
  */
 export function getFaultsByCategory() {
   const categories = {
@@ -200,7 +200,7 @@ export function getFaultsByCategory() {
 }
 
 /**
- * 获取故障统计信息
+ * Get fault statistics
  */
 export function getFaultStats() {
   const stats = {

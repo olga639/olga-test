@@ -1,7 +1,7 @@
 /**
  * @fault-type: infinite-loop
  * @category: runtime-errors
- * @description: useEffect依赖配置错误导致无限渲染
+ * @description: useEffect dependency configuration error causes infinite render
  * @expected-error: Maximum update depth exceeded
  * @target-file: src/pages/TaskListPage.jsx
  * @severity: high
@@ -15,11 +15,11 @@ import Loading from '../components/common/Loading';
 import { Link } from 'react-router-dom';
 
 /**
- * TaskListPage - 任务列表页面
+ * TaskListPage - Task List Page
  * 
- * 🚨 故障注入：无限循环
- * 错误类型：useEffect依赖配置错误
- * 预期结果：页面卡死，控制台报错 "Maximum update depth exceeded"
+ * FAULT INJECTION: Infinite loop
+ * Error Type: useEffect dependency configuration error
+ * Expected Result: Page freezes, console shows "Maximum update depth exceeded"
  */
 function TaskListPage() {
   const {
@@ -37,9 +37,9 @@ function TaskListPage() {
   const [sortBy, setSortBy] = useState('createdAt');
   const [filteredTasks, setFilteredTasks] = useState([]);
 
-  // 🚨 故障注入：无限循环
-  // 错误：在useEffect中更新state，但state又在依赖数组中
-  // 这会导致无限循环：state更新 → useEffect触发 → state更新 → ...
+  // FAULT INJECTION: Infinite loop
+  // Error: Updating state in useEffect, but state is in dependency array
+  // This causes infinite loop: state update -> useEffect trigger -> state update -> ...
   useEffect(() => {
     let filtered = searchQuery ? searchTasks(searchQuery) : tasks;
 
@@ -67,24 +67,24 @@ function TaskListPage() {
       return 0;
     });
 
-    // 🚨 错误：更新state，但filteredTasks在依赖数组中
+    // ERROR: Updating state, but filteredTasks is in dependency array
     setFilteredTasks(filtered);
   }, [tasks, searchQuery, filterStatus, filterPriority, sortBy, searchTasks, filteredTasks]);
-  // ⬆️ 问题：filteredTasks在依赖数组中，导致无限循环
+  // Problem: filteredTasks in dependency array causes infinite loop
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
 
   if (loading && tasks.length === 0) {
-    return <Loading fullScreen text="加载任务列表..." />;
+    return <Loading fullScreen text="Loading task list..." />;
   }
 
   if (error) {
     return (
       <div className="text-center py-12">
-        <div className="text-red-600 text-xl mb-4">❌ {error}</div>
-        <Button onClick={() => window.location.reload()}>重新加载</Button>
+        <div className="text-red-600 text-xl mb-4">{error}</div>
+        <Button onClick={() => window.location.reload()}>Reload</Button>
       </div>
     );
   }
@@ -93,15 +93,15 @@ function TaskListPage() {
     <div className="space-y-6 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">任务列表</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Task List</h1>
           <p className="text-gray-600 mt-1">
-            共 {filteredTasks.length} 个任务
-            {searchQuery && ` (搜索: "${searchQuery}")`}
+            {filteredTasks.length} tasks total
+            {searchQuery && ` (Search: "${searchQuery}")`}
           </p>
         </div>
         <Link to="/tasks/create">
           <Button variant="primary" size="lg">
-            ➕ 创建新任务
+            + Create New Task
           </Button>
         </Link>
       </div>
@@ -110,12 +110,12 @@ function TaskListPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              搜索任务
+              Search Tasks
             </label>
             <div className="relative">
               <input
                 type="text"
-                placeholder="搜索标题、描述或标签..."
+                placeholder="Search title, description or tags..."
                 value={searchQuery}
                 onChange={handleSearch}
                 className="input pl-10"
@@ -125,33 +125,33 @@ function TaskListPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              状态
+              Status
             </label>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
               className="input"
             >
-              <option value="all">全部状态</option>
-              <option value="pending">待处理</option>
-              <option value="in-progress">进行中</option>
-              <option value="completed">已完成</option>
+              <option value="all">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="in-progress">In Progress</option>
+              <option value="completed">Completed</option>
             </select>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              优先级
+              Priority
             </label>
             <select
               value={filterPriority}
               onChange={(e) => setFilterPriority(e.target.value)}
               className="input"
             >
-              <option value="all">全部优先级</option>
-              <option value="high">高优先级</option>
-              <option value="medium">中优先级</option>
-              <option value="low">低优先级</option>
+              <option value="all">All Priorities</option>
+              <option value="high">High Priority</option>
+              <option value="medium">Medium Priority</option>
+              <option value="low">Low Priority</option>
             </select>
           </div>
         </div>
@@ -172,7 +172,7 @@ function TaskListPage() {
         <div className="bg-white rounded-lg shadow-md p-12 text-center">
           <div className="text-6xl mb-4">🔍</div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
-            没有找到任务
+            No Tasks Found
           </h3>
         </div>
       )}
@@ -181,4 +181,3 @@ function TaskListPage() {
 }
 
 export default TaskListPage;
-

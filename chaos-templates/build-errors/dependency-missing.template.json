@@ -1,7 +1,7 @@
 {
   "name": "castrel-webhook-demo",
   "version": "2.0.0",
-  "description": "React Chaos Engineering Demo - 混沌工程演练项目",
+  "description": "React Chaos Engineering Demo - Chaos Engineering Exercise Project",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -20,12 +20,11 @@
     "tailwindcss": "^3.4.1",
     "vite": "^5.1.0"
   },
-  "_comment": "🚨 故障注入：缺少 react-router-dom 依赖",
+  "_comment": "FAULT INJECTION: Missing react-router-dom dependency",
   "_fault-type": "dependency-missing",
   "_category": "build-errors",
-  "_description": "package.json中缺少必要的依赖包 react-router-dom",
+  "_description": "package.json missing required dependency react-router-dom",
   "_expected-error": "Cannot find package 'react-router-dom'",
   "_severity": "high",
-  "_note": "react-router-dom 已被移除，会导致构建失败"
+  "_note": "react-router-dom has been removed, will cause build failure"
 }
-

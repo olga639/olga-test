@@ -1,7 +1,7 @@
 /**
  * @fault-type: import-error
  * @category: build-errors
- * @description: 错误的import路径，导致模块无法找到
+ * @description: Wrong import path causes module not found error
  * @expected-error: Cannot find module
  * @target-file: src/App.jsx
  * @severity: high
@@ -13,21 +13,21 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import Layout from './components/Layout/Layout';
 import { TaskProvider } from './context/TaskContext';
 
-// 🚨 故障注入：错误的导入路径
-// 正确路径应该是 './pages/Home'，这里故意写错
-import Home from './pages/HomePage';  // ❌ 错误：文件不存在
-import TaskListPage from './pages/TaskListPages';  // ❌ 错误：文件名拼写错误
+// FAULT INJECTION: Wrong import paths
+// Correct path should be './pages/Home', intentionally wrong here
+import Home from './pages/HomePage';  // ERROR: File does not exist
+import TaskListPage from './pages/TaskListPages';  // ERROR: Filename spelling error
 import TaskDetailPage from './pages/TaskDetailPage';
 import CreateTaskPage from './pages/CreateTaskPage';
 import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 /**
- * App - 应用根组件
+ * App - Root Application Component
  * 
- * 🚨 故障注入：导入路径错误
- * 错误类型：模块路径不存在
- * 预期结果：Vite编译失败，提示 "Cannot find module"
+ * FAULT INJECTION: Import path error
+ * Error Type: Module path does not exist
+ * Expected Result: Vite compilation fails with "Cannot find module"
  */
 function App() {
   return (
@@ -51,4 +51,3 @@ function App() {
 }
 
 export default App;
-

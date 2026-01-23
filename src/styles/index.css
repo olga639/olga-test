@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 全局样式 */
+/* Global Styles */
 @layer base {
   * {
     @apply box-border;
@@ -24,7 +24,7 @@
   }
 }
 
-/* 自定义组件样式 */
+/* Custom Component Styles */
 @layer components {
   .btn {
     @apply px-4 py-2 rounded-lg font-medium transition-all duration-200 
@@ -78,7 +78,7 @@
   }
 }
 
-/* 工具类 */
+/* Utility Classes */
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -94,7 +94,7 @@
   }
 }
 
-/* 加载动画 */
+/* Loading Animation */
 .loading-spinner {
   border: 3px solid rgba(0, 0, 0, 0.1);
   border-radius: 50%;
@@ -110,7 +110,7 @@
   }
 }
 
-/* 淡入动画 */
+/* Fade In Animation */
 .fade-in {
   animation: fadeIn 0.3s ease-in;
 }
@@ -124,7 +124,7 @@
   }
 }
 
-/* 滑入动画 */
+/* Slide Up Animation */
 .slide-up {
   animation: slideUp 0.3s ease-out;
 }
@@ -139,4 +139,3 @@
     opacity: 1;
   }
 }
-

@@ -1,7 +1,7 @@
 /**
  * @fault-type: component-crash
  * @category: runtime-errors
- * @description: 访问undefined属性导致组件崩溃
+ * @description: Accessing undefined property causes component crash
  * @expected-error: Cannot read property 'title' of undefined
  * @target-file: src/components/features/TaskCard.jsx
  * @severity: high
@@ -13,32 +13,32 @@ import Badge from '../common/Badge';
 import Button from '../common/Button';
 
 /**
- * TaskCard - 任务卡片组件
+ * TaskCard - Task Card Component
  * 
- * 🚨 故障注入：组件崩溃
- * 错误类型：访问undefined对象的属性
- * 预期结果：运行时错误，ErrorBoundary捕获
+ * FAULT INJECTION: Component crash
+ * Error Type: Accessing property of undefined object
+ * Expected Result: Runtime error, caught by ErrorBoundary
  */
 function TaskCard({ task, onToggleStatus, onDelete }) {
   const navigate = useNavigate();
 
-  // 🚨 故障注入：移除了默认值和安全检查
-  // 原本：task = {}
-  // 现在：task 可能为 undefined
+  // FAULT INJECTION: Removed default value and safety check
+  // Original: task = {}
+  // Now: task may be undefined
 
   const priorityConfig = {
-    high: { label: '高优先级', variant: 'danger', icon: '🔥' },
-    medium: { label: '中优先级', variant: 'warning', icon: '⚡' },
-    low: { label: '低优先级', variant: 'info', icon: '📌' }
+    high: { label: 'High Priority', variant: 'danger', icon: '🔥' },
+    medium: { label: 'Medium Priority', variant: 'warning', icon: '⚡' },
+    low: { label: 'Low Priority', variant: 'info', icon: '📌' }
   };
 
   const statusConfig = {
-    pending: { label: '待处理', variant: 'default', icon: '⏳' },
-    'in-progress': { label: '进行中', variant: 'info', icon: '🚀' },
-    completed: { label: '已完成', variant: 'success', icon: '✅' }
+    pending: { label: 'Pending', variant: 'default', icon: '⏳' },
+    'in-progress': { label: 'In Progress', variant: 'info', icon: '🚀' },
+    completed: { label: 'Completed', variant: 'success', icon: '✅' }
   };
 
-  // 🚨 错误：直接访问可能为undefined的task对象
+  // ERROR: Directly accessing potentially undefined task object
   const priority = priorityConfig[task.priority] || priorityConfig.medium;
   const status = statusConfig[task.status] || statusConfig.pending;
 
@@ -53,16 +53,16 @@ function TaskCard({ task, onToggleStatus, onDelete }) {
 
   const handleDelete = (e) => {
     e.stopPropagation();
-    // 🚨 错误：task可能为undefined
-    if (window.confirm(`确定要删除任务"${task.title}"吗？`)) {
+    // ERROR: task may be undefined
+    if (window.confirm(`Are you sure you want to delete "${task.title}"?`)) {
       onDelete && onDelete(task.id);
     }
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return '无截止日期';
+    if (!dateString) return 'No due date';
     const date = new Date(dateString);
-    return date.toLocaleDateString('zh-CN', {
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
@@ -70,7 +70,7 @@ function TaskCard({ task, onToggleStatus, onDelete }) {
   };
 
   const isOverdue = () => {
-    // 🚨 错误：task可能为undefined
+    // ERROR: task may be undefined
     if (!task.dueDate || task.status === 'completed') return false;
     return new Date(task.dueDate) < new Date();
   };
@@ -82,7 +82,7 @@ function TaskCard({ task, onToggleStatus, onDelete }) {
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
-          {/* 🚨 错误：task可能为undefined，访问task.title会崩溃 */}
+          {/* ERROR: task may be undefined, accessing task.title will crash */}
           <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
             {task.title}
           </h3>
@@ -99,7 +99,7 @@ function TaskCard({ task, onToggleStatus, onDelete }) {
         <Badge variant={status.variant} size="sm">
           {status.icon} {status.label}
         </Badge>
-        {/* 🚨 错误：task.tags可能为undefined */}
+        {/* ERROR: task.tags may be undefined */}
         {task.tags && task.tags.map((tag, index) => (
           <Badge key={index} variant="default" size="sm">
             {tag}
@@ -123,7 +123,7 @@ function TaskCard({ task, onToggleStatus, onDelete }) {
         </svg>
         <span className={isOverdue() ? 'text-red-600 font-medium' : ''}>
           {formatDate(task.dueDate)}
-          {isOverdue() && ' (已逾期)'}
+          {isOverdue() && ' (Overdue)'}
         </span>
       </div>
 
@@ -134,14 +134,14 @@ function TaskCard({ task, onToggleStatus, onDelete }) {
           onClick={handleToggleStatus}
           className="flex-1"
         >
-          {task.status === 'completed' ? '标记未完成' : '标记完成'}
+          {task.status === 'completed' ? 'Mark Incomplete' : 'Mark Complete'}
         </Button>
         <Button
           variant="danger"
           size="sm"
           onClick={handleDelete}
         >
-          删除
+          Delete
         </Button>
       </div>
     </div>
@@ -149,4 +149,3 @@ function TaskCard({ task, onToggleStatus, onDelete }) {
 }
 
 export default TaskCard;
-

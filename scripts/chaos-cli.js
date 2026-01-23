@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
 /**
- * Chaos Engineering CLI - 混沌工程命令行工具
+ * Chaos Engineering CLI - Chaos Engineering Command Line Tool
  * 
- * 功能：
- * - 注入故障代码
- * - 恢复正常状态
- * - 列出所有故障类型
- * - 查看故障详情
+ * Features:
+ * - Inject fault code
+ * - Restore normal state
+ * - List all fault types
+ * - View fault details
  * 
- * 使用方法：
+ * Usage:
  * npm run chaos inject --type <fault-type>
  * npm run chaos restore
  * npm run chaos list
@@ -23,14 +23,14 @@ import { existsSync } from 'fs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// 导入命令处理器
+// Import command handlers
 const commandsDir = join(__dirname, 'commands');
 
-// 解析命令行参数
+// Parse command line arguments
 const args = process.argv.slice(2);
 const command = args[0];
 
-// 命令映射
+// Command mapping
 const commands = {
   inject: 'inject.js',
   restore: 'restore.js',
@@ -40,57 +40,57 @@ const commands = {
 };
 
 /**
- * 显示帮助信息
+ * Show help information
  */
 function showHelp() {
   console.log(`
-╔══════════════════════════════════════════════════════════════╗
-║         Chaos Engineering CLI - 混沌工程命令行工具          ║
-╚══════════════════════════════════════════════════════════════╝
++==============================================================+
+|         Chaos Engineering CLI - Command Line Tool            |
++==============================================================+
 
-使用方法:
+Usage:
   npm run chaos <command> [options]
 
-可用命令:
-  inject    注入故障代码
-  restore   恢复正常状态
-  list      列出所有故障类型
-  info      查看故障详情
-  help      显示帮助信息
+Available Commands:
+  inject    Inject fault code
+  restore   Restore normal state
+  list      List all fault types
+  info      View fault details
+  help      Show help information
 
-示例:
+Examples:
   npm run chaos inject --type component-crash
   npm run chaos restore
   npm run chaos list
   npm run chaos info --type component-crash
 
-更多信息请查看文档: docs/CLI_USAGE.md
+For more information, see documentation: docs/CLI_USAGE.md
 `);
 }
 
 /**
- * 主函数
+ * Main function
  */
 async function main() {
-  // 如果没有命令或命令是help，显示帮助
+  // If no command or command is help, show help
   if (!command || command === 'help' || command === '--help' || command === '-h') {
     showHelp();
     process.exit(0);
   }
 
-  // 检查命令是否存在
+  // Check if command exists
   if (!commands[command]) {
-    console.error(`\n❌ 错误: 未知命令 "${command}"\n`);
-    console.log('💡 使用 "npm run chaos help" 查看可用命令\n');
+    console.error(`\n[ERROR] Unknown command "${command}"\n`);
+    console.log('[TIP] Use "npm run chaos help" to view available commands\n');
     process.exit(1);
   }
 
-  // 动态导入并执行命令
+  // Dynamically import and execute command
   try {
     const commandPath = join(commandsDir, commands[command]);
     
     if (!existsSync(commandPath)) {
-      console.error(`\n❌ 错误: 命令文件不存在 ${commandPath}\n`);
+      console.error(`\n[ERROR] Command file does not exist ${commandPath}\n`);
       process.exit(1);
     }
 
@@ -98,14 +98,14 @@ async function main() {
     const commandHandler = commandModule.default || commandModule;
     
     if (typeof commandHandler !== 'function') {
-      console.error(`\n❌ 错误: 命令处理器无效\n`);
+      console.error(`\n[ERROR] Invalid command handler\n`);
       process.exit(1);
     }
 
-    // 执行命令
+    // Execute command
     await commandHandler(args.slice(1));
   } catch (error) {
-    console.error(`\n❌ 执行命令时发生错误:\n`);
+    console.error(`\n[ERROR] Error occurred while executing command:\n`);
     console.error(error.message);
     if (process.env.DEBUG) {
       console.error(error.stack);
@@ -114,10 +114,9 @@ async function main() {
   }
 }
 
-// 执行主函数
+// Execute main function
 main().catch((error) => {
-  console.error('\n❌ 未捕获的错误:\n');
+  console.error('\n[ERROR] Uncaught error:\n');
   console.error(error);
   process.exit(1);
 });
-

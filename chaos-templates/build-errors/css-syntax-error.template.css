@@ -1,56 +1,55 @@
 /**
  * @fault-type: css-syntax-error
  * @category: build-errors
- * @description: CSS或TailwindCSS配置错误
+ * @description: CSS or TailwindCSS configuration error
  * @expected-error: CssSyntaxError
  * @target-file: src/styles/index.css
  * @severity: medium
  */
 
-/* 🚨 故障注入：CSS语法错误 */
-/* 错误类型：无效的Tailwind指令和CSS语法 */
-/* 预期结果：CSS编译失败 */
+/* FAULT INJECTION: CSS Syntax Error */
+/* Error Type: Invalid Tailwind directives and CSS syntax */
+/* Expected Result: CSS compilation fails */
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 🔴 错误：无效的@apply指令 */
+/* ERROR: Invalid @apply directive */
 .custom-class {
   @apply invalid-tailwind-class-that-does-not-exist;
   @apply text-[invalid-size];
 }
 
-/* 🔴 错误：CSS语法错误 - 缺少分号和括号 */
+/* ERROR: CSS syntax error - missing semicolons and brackets */
 .broken-syntax {
   color: red
-  background: blue /* 缺少分号 */
+  background: blue /* missing semicolon */
   border: 1px solid black
 }
 
-/* 🔴 错误：无效的CSS属性 */
+/* ERROR: Invalid CSS properties */
 .invalid-properties {
   invalid-property: value;
   another-invalid: 123px;
 }
 
-/* 🔴 错误：选择器语法错误 */
+/* ERROR: Selector syntax error */
 .broken-selector {
   color: red;
 
-/* 缺少闭合括号 */
+/* Missing closing bracket */
 
-/* 🔴 错误：无效的@layer指令 */
+/* ERROR: Invalid @layer directive */
 @layer invalid-layer-name {
   .test {
     color: blue;
   }
 }
 
-/* 🔴 错误：无效的媒体查询 */
+/* ERROR: Invalid media query */
 @media (invalid-query) {
   .test {
     color: red;
   }
 }
-

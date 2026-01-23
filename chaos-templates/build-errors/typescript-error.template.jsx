@@ -1,7 +1,7 @@
 /**
  * @fault-type: typescript-error
  * @category: build-errors
- * @description: 类型定义错误导致TypeScript编译失败
+ * @description: Type definition error causes TypeScript compilation failure
  * @expected-error: Type error
  * @target-file: src/App.jsx
  * @severity: high
@@ -13,9 +13,9 @@ import ErrorBoundary from './components/common/ErrorBoundary';
 import Layout from './components/Layout/Layout';
 import { TaskProvider } from './context/TaskContext';
 
-// 🚨 故障注入：TypeScript类型错误
-// 错误类型：类型不匹配
-// 预期结果：如果启用TypeScript检查，编译失败
+// FAULT INJECTION: TypeScript type error
+// Error Type: Type mismatch
+// Expected Result: If TypeScript checking is enabled, compilation fails
 
 // Pages
 import Home from './pages/Home';
@@ -26,17 +26,17 @@ import AboutPage from './pages/AboutPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 /**
- * App - 应用根组件
+ * App - Root Application Component
  * 
- * 🚨 故障注入：TypeScript类型错误
- * 错误类型：类型定义不匹配
- * 预期结果：TypeScript编译失败
+ * FAULT INJECTION: TypeScript type error
+ * Error Type: Type definition mismatch
+ * Expected Result: TypeScript compilation fails
  */
 function App() {
-  // 🔴 类型错误：将字符串赋值给数字类型
+  // ERROR: Assigning string to number type
   const count: number = "123"; // Type 'string' is not assignable to type 'number'
   
-  // 🔴 类型错误：使用未定义的类型
+  // ERROR: Using undefined type
   const user: UserType = { name: "test" }; // Cannot find name 'UserType'
 
   return (
@@ -60,4 +60,3 @@ function App() {
 }
 
 export default App;
-
