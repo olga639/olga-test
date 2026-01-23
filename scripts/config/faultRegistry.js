@@ -11,9 +11,9 @@ export const faultRegistry = {
   // ==================== 构建错误 - 语法和编译错误 ====================
   
   'syntax-error': {
-    name: 'JSX语法错误',
+    name: 'JSX Syntax Error',
     category: 'build-errors',
-    description: 'JSX语法错误，缺少闭合标签导致编译失败',
+    description: 'JSX syntax error, missing closing tag causes compilation failure',
     targetFiles: ['src/pages/Home.jsx'],
     templateFile: 'chaos-templates/build-errors/syntax-error.template.jsx',
     expectedError: 'Unexpected token',
